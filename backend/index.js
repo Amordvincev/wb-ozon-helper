@@ -416,6 +416,9 @@ app.post('/api/avito/upload', (req, res) => {
     const date = new Date().toISOString().split('T')[0];
     const db = getDb();
 
+    // Remove old data for today to avoid duplicates
+    db.run(`DELETE FROM avito_listings WHERE date = ?`, [date]);
+
     for (const item of listings) {
       db.run(
         `INSERT INTO avito_listings (city, date, brand, model, title, price, year, mileage, url)

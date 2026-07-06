@@ -15,11 +15,6 @@ function initBot() {
 
   bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
-    bot.sendMessage(chatId,
-      '🚗 *Avito Волгоград — рынок авто*\n\n'
-      + 'Выбери марку, чтобы посмотреть статистику по моделям:',
-      { parse_mode: 'Markdown', reply_markup: { inline_keyboard: [[]] } }
-    );
     showBrands(chatId, null, true);
   });
 
@@ -63,10 +58,10 @@ function initBot() {
 async function showBrands(chatId, msgId, isNew) {
   const db = getDb();
   const rows = db.exec(
-    `SELECT brand, COUNT(*) as count, AVG(price) as avg
+    `SELECT UPPER(brand) as brand_upper, COUNT(*) as count, AVG(price) as avg
      FROM avito_listings WHERE brand != ''
      AND date >= date('now', '-14 days')
-     GROUP BY brand ORDER BY count DESC LIMIT 12`,
+     GROUP BY brand_upper ORDER BY count DESC LIMIT 12`,
     []
   );
 
