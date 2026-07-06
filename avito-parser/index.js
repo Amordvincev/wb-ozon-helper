@@ -10,57 +10,38 @@ const BACKEND_URL = process.env.BACKEND_URL || 'https://wb-ozon-helper.onrender.
 
 const CITY = { name: 'Волгоград', slug: 'volgograd' };
 
-const RUS_BRANDS = {
-  'lada': 'lada', 'vaz': 'lada', 'лада': 'lada', 'ваз': 'lada',
-  'toyota': 'toyota', 'тойота': 'toyota',
-  'kia': 'kia', 'киа': 'kia',
-  'hyundai': 'hyundai', 'хендэ': 'hyundai', 'хёндэ': 'hyundai',
-  'renault': 'renault', 'рено': 'renault',
-  'nissan': 'nissan', 'ниссан': 'nissan',
-  'volkswagen': 'volkswagen', 'vw': 'volkswagen', 'фольксваген': 'volkswagen',
-  'bmw': 'bmw',
-  'mercedes': 'mercedes', 'mercedes-benz': 'mercedes',
-  'audi': 'audi',
-  'ford': 'ford', 'форд': 'ford',
-  'skoda': 'skoda', 'шкода': 'skoda',
-  'mitsubishi': 'mitsubishi', 'мицубиси': 'mitsubishi',
-  'mazda': 'mazda', 'мазда': 'mazda',
-  'chevrolet': 'chevrolet', 'шевроле': 'chevrolet',
-  'honda': 'honda', 'хонда': 'honda',
-  'suzuki': 'suzuki', 'сузуки': 'suzuki',
-  'lexus': 'lexus', 'лексус': 'lexus',
-  'daewoo': 'daewoo', 'дэу': 'daewoo',
-  'opel': 'opel', 'опель': 'opel',
-  'peugeot': 'peugeot', 'пежо': 'peugeot',
-  'citroen': 'citroen', 'ситроен': 'citroen',
-  'land rover': 'land rover',
-  'jeep': 'jeep',
-  'infiniti': 'infiniti',
-  'porsche': 'porsche',
-  'volvo': 'volvo',
-  'mini': 'mini',
-  'subaru': 'subaru',
-  'geely': 'geely', 'джили': 'geely',
-  'changan': 'changan',
-  'haval': 'haval', 'хавал': 'haval',
-  'chery': 'chery', 'чери': 'chery',
-  'exeed': 'exeed', 'эксед': 'exeed',
-  'uaz': 'uaz', 'уаз': 'uaz',
-  'gaz': 'gaz', 'газ': 'gaz',
-  'moskvich': 'moskvich', 'москвич': 'moskvich',
-  'great wall': 'great wall',
-  'datsun': 'datsun',
-  'jaguar': 'jaguar',
-  'land rover': 'land rover',
-  'lifan': 'lifan',
-  'jac': 'jac',
-  'zotye': 'zotye',
-  'brilliance': 'brilliance',
-  'ravon': 'ravon',
-  'tesla': 'tesla',
-};
+const KNOWN_BRANDS = [
+  'Lada', 'ВАЗ', 'Vaz', 'Toyota', 'Kia', 'Hyundai', 'Renault', 'Nissan',
+  'Volkswagen', 'VW', 'BMW', 'Mercedes-Benz', 'Mercedes', 'Audi', 'Ford',
+  'Skoda', 'Mitsubishi', 'Mazda', 'Chevrolet', 'Honda', 'Suzuki', 'Lexus',
+  'Daewoo', 'Opel', 'Peugeot', 'Citroen', 'Land Rover', 'Jeep', 'Infiniti',
+  'Porsche', 'Volvo', 'Mini', 'Subaru', 'Geely', 'Changan', 'Haval',
+  'Chery', 'Exeed', 'Lifan', 'JAC', 'Zotye', 'Brilliance', 'Ravon',
+  'Tesla', 'UAZ', 'ГАЗ', 'Газ', 'Moskvich', 'Москвич', 'Datsun',
+  'Great Wall', 'Jaguar', 'Seat', 'Fiat', 'Dodge', 'Chrysler',
+  'SsangYong', 'Ssang yong', 'Daihatsu', 'Alfa Romeo', 'Citroёn',
+  'Omoda', 'Jetour', 'Faw', 'Bestune', 'Kaiyi', 'SWM',
+];
 
-const BRAND_LIST = Object.keys(RUS_BRANDS).sort((a, b) => b.length - a.length);
+const BRAND_SET = new Set(KNOWN_BRANDS.map(b => b.toLowerCase()));
+
+function parseBrand(title) {
+  const firstWord = title.split(/[\s,]+/)[0];
+  const lower = firstWord.toLowerCase();
+  if (BRAND_SET.has(lower)) return firstWord;
+  // Check multi-word brands
+  const words = title.split(/\s+/);
+  for (let i = Math.min(words.length, 3); i >= 1; i--) {
+    const phrase = words.slice(0, i).join(' ').toLowerCase();
+    if (BRAND_SET.has(phrase)) return words.slice(0, i).join(' ');
+  }
+  return firstWord;
+}
+
+function parseModel(title, brand) {
+  const rest = title.slice(brand.length).trim();
+  return rest.split(/[\s,]+/)[0] || '-';
+}
 
 async function fetchPage(url) {
   const res = await fetch(url, {
@@ -72,36 +53,6 @@ async function fetchPage(url) {
   });
   if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
   return await res.text();
-}
-
-function parseBrand(title) {
-  const lower = title.toLowerCase().replace(/[^a-zа-яё\s]/g, ' ');
-  for (const key of BRAND_LIST) {
-    if (lower.startsWith(key) || lower.includes(' ' + key + ' ')) {
-      return RUS_BRANDS[key];
-    }
-  }
-  const first = lower.split(/\s+/)[0];
-  return RUS_BRANDS[first] || first;
-}
-
-function parseModel(title, brand) {
-  const lower = title.toLowerCase();
-  // Try to find brand in the title and remove it
-  let rest = title;
-  for (const key of BRAND_LIST) {
-    if (RUS_BRANDS[key] === brand || key === brand) {
-      const idx = lower.indexOf(key);
-      if (idx >= 0) {
-        rest = title.slice(idx + key.length).trim();
-        break;
-      }
-    }
-  }
-  // Remove year like ", 2020" or " 2020 г."
-  rest = rest.replace(/[,]?\s*\d{4}\s*г?\.?\s*$/, '').trim();
-  const model = rest.split(/[\s,]+/)[0];
-  return model && model.length < 30 ? model : '-';
 }
 
 function extractNumber(text) {

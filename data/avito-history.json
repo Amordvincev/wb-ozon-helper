@@ -114,5 +114,1141 @@
       ],
       "sampledAt": "2026-07-06T23:38:28.035Z"
     }
+  },
+  {
+    "date": "2026-07-06",
+    "city": "Волгоград",
+    "stats": {
+      "total": 1284,
+      "avgPrice": 2113036,
+      "medianPrice": 1776000,
+      "minPrice": 100000,
+      "maxPrice": 15000000,
+      "avgYear": 2023,
+      "avgMileage": 131867,
+      "brands": [
+        {
+          "brand": "lada",
+          "count": 364,
+          "avgPrice": 1218659
+        },
+        {
+          "brand": "от",
+          "count": 170,
+          "avgPrice": 2492374
+        },
+        {
+          "brand": "haval",
+          "count": 120,
+          "avgPrice": 2528933
+        },
+        {
+          "brand": "geely",
+          "count": 92,
+          "avgPrice": 4230642
+        },
+        {
+          "brand": "",
+          "count": 80,
+          "avgPrice": 1028000
+        },
+        {
+          "brand": "tenet",
+          "count": 64,
+          "avgPrice": 2690750
+        },
+        {
+          "brand": "hongqi",
+          "count": 40,
+          "avgPrice": 4183300
+        },
+        {
+          "brand": "chery",
+          "count": 40,
+          "avgPrice": 2855400
+        },
+        {
+          "brand": "kia",
+          "count": 24,
+          "avgPrice": 1321333
+        },
+        {
+          "brand": "moskvich",
+          "count": 24,
+          "avgPrice": 2147167
+        },
+        {
+          "brand": "jaecoo",
+          "count": 20,
+          "avgPrice": 2823400
+        },
+        {
+          "brand": "belgee",
+          "count": 20,
+          "avgPrice": 2570390
+        },
+        {
+          "brand": "первым",
+          "count": 20,
+          "avgPrice": 100000
+        },
+        {
+          "brand": "ford",
+          "count": 20,
+          "avgPrice": 494400
+        },
+        {
+          "brand": "exeed",
+          "count": 16,
+          "avgPrice": 2235000
+        },
+        {
+          "brand": "omoda",
+          "count": 16,
+          "avgPrice": 2759000
+        },
+        {
+          "brand": "renault",
+          "count": 16,
+          "avgPrice": 1416250
+        },
+        {
+          "brand": "hyundai",
+          "count": 16,
+          "avgPrice": 903750
+        },
+        {
+          "brand": "nissan",
+          "count": 12,
+          "avgPrice": 1366000
+        },
+        {
+          "brand": "toyota",
+          "count": 12,
+          "avgPrice": 1259333
+        }
+      ],
+      "models": [
+        {
+          "brand": "lada",
+          "model": ")",
+          "fullName": "lada )",
+          "count": 364,
+          "avgPrice": 1218659,
+          "avgYear": 2023,
+          "avgMileage": 102259
+        },
+        {
+          "brand": "от",
+          "model": "от",
+          "fullName": "от от",
+          "count": 170,
+          "avgPrice": 2492374,
+          "avgYear": null,
+          "avgMileage": null
+        },
+        {
+          "brand": "haval",
+          "model": "Jolion",
+          "fullName": "haval Jolion",
+          "count": 68,
+          "avgPrice": 2384294,
+          "avgYear": 2026,
+          "avgMileage": null
+        },
+        {
+          "brand": "tenet",
+          "model": "TENET",
+          "fullName": "tenet TENET",
+          "count": 64,
+          "avgPrice": 2690750,
+          "avgYear": 2026,
+          "avgMileage": 135951
+        },
+        {
+          "brand": "geely",
+          "model": "Monjaro",
+          "fullName": "geely Monjaro",
+          "count": 52,
+          "avgPrice": 4880375,
+          "avgYear": 2025,
+          "avgMileage": 150000
+        },
+        {
+          "brand": "hongqi",
+          "model": "Hongqi",
+          "fullName": "hongqi Hongqi",
+          "count": 40,
+          "avgPrice": 4183300,
+          "avgYear": null,
+          "avgMileage": null
+        },
+        {
+          "brand": "chery",
+          "model": "Tiggo",
+          "fullName": "chery Tiggo",
+          "count": 40,
+          "avgPrice": 2855400,
+          "avgYear": 2024,
+          "avgMileage": 149987
+        },
+        {
+          "brand": "",
+          "model": "1",
+          "fullName": " 1",
+          "count": 33,
+          "avgPrice": 1515182,
+          "avgYear": null,
+          "avgMileage": null
+        },
+        {
+          "brand": "haval",
+          "model": "M6",
+          "fullName": "haval M6",
+          "count": 28,
+          "avgPrice": 2177571,
+          "avgYear": 2026,
+          "avgMileage": null
+        },
+        {
+          "brand": "moskvich",
+          "model": "3",
+          "fullName": "moskvich 3",
+          "count": 24,
+          "avgPrice": 2147167,
+          "avgYear": null,
+          "avgMileage": 100000
+        },
+        {
+          "brand": "geely",
+          "model": "Cityray",
+          "fullName": "geely Cityray",
+          "count": 20,
+          "avgPrice": 3193990,
+          "avgYear": 2025,
+          "avgMileage": 150000
+        },
+        {
+          "brand": "jaecoo",
+          "model": "JAECOO",
+          "fullName": "jaecoo JAECOO",
+          "count": 20,
+          "avgPrice": 2823400,
+          "avgYear": null,
+          "avgMileage": 140000
+        },
+        {
+          "brand": "belgee",
+          "model": "Belgee",
+          "fullName": "belgee Belgee",
+          "count": 20,
+          "avgPrice": 2570390,
+          "avgYear": null,
+          "avgMileage": 150000
+        },
+        {
+          "brand": "первым",
+          "model": "Первым",
+          "fullName": "первым Первым",
+          "count": 20,
+          "avgPrice": 100000,
+          "avgYear": 2024,
+          "avgMileage": 150000
+        },
+        {
+          "brand": "ford",
+          "model": "Focus",
+          "fullName": "ford Focus",
+          "count": 20,
+          "avgPrice": 494400,
+          "avgYear": 2010,
+          "avgMileage": 202123
+        },
+        {
+          "brand": "omoda",
+          "model": "OMODA",
+          "fullName": "omoda OMODA",
+          "count": 16,
+          "avgPrice": 2759000,
+          "avgYear": null,
+          "avgMileage": 100000
+        },
+        {
+          "brand": "haval",
+          "model": "Dargo",
+          "fullName": "haval Dargo",
+          "count": 12,
+          "avgPrice": 3765667,
+          "avgYear": 2026,
+          "avgMileage": null
+        },
+        {
+          "brand": "geely",
+          "model": "Atlas",
+          "fullName": "geely Atlas",
+          "count": 12,
+          "avgPrice": 3673323,
+          "avgYear": null,
+          "avgMileage": 150000
+        },
+        {
+          "brand": "haval",
+          "model": "F7x",
+          "fullName": "haval F7x",
+          "count": 8,
+          "avgPrice": 2898000,
+          "avgYear": 2023,
+          "avgMileage": 71253
+        },
+        {
+          "brand": "kia",
+          "model": "Cerato",
+          "fullName": "kia Cerato",
+          "count": 8,
+          "avgPrice": 1375000,
+          "avgYear": 2024,
+          "avgMileage": 179549
+        },
+        {
+          "brand": "exeed",
+          "model": "VX",
+          "fullName": "exeed VX",
+          "count": 8,
+          "avgPrice": 2800000,
+          "avgYear": null,
+          "avgMileage": 49989
+        },
+        {
+          "brand": "toyota",
+          "model": "Avensis",
+          "fullName": "toyota Avensis",
+          "count": 8,
+          "avgPrice": 1099000,
+          "avgYear": null,
+          "avgMileage": 196584
+        },
+        {
+          "brand": "exeed",
+          "model": "LX",
+          "fullName": "exeed LX",
+          "count": 8,
+          "avgPrice": 1670000,
+          "avgYear": 2024,
+          "avgMileage": 84469
+        },
+        {
+          "brand": "renault",
+          "model": "Kaptur",
+          "fullName": "renault Kaptur",
+          "count": 8,
+          "avgPrice": 1595000,
+          "avgYear": null,
+          "avgMileage": 76218
+        },
+        {
+          "brand": "nissan",
+          "model": "Qashqai",
+          "fullName": "nissan Qashqai",
+          "count": 8,
+          "avgPrice": 1315000,
+          "avgYear": null,
+          "avgMileage": 170483
+        },
+        {
+          "brand": "great wall",
+          "model": "Hover",
+          "fullName": "great wall Hover",
+          "count": 8,
+          "avgPrice": 547500,
+          "avgYear": 2012,
+          "avgMileage": 117772
+        },
+        {
+          "brand": "renault",
+          "model": "Duster",
+          "fullName": "renault Duster",
+          "count": 8,
+          "avgPrice": 1237500,
+          "avgYear": null,
+          "avgMileage": 82700
+        },
+        {
+          "brand": "hoвый",
+          "model": "Hoвый",
+          "fullName": "hoвый Hoвый",
+          "count": 6,
+          "avgPrice": 15000000,
+          "avgYear": null,
+          "avgMileage": 100000
+        },
+        {
+          "brand": "новый",
+          "model": "Новый",
+          "fullName": "новый Новый",
+          "count": 6,
+          "avgPrice": 15000000,
+          "avgYear": null,
+          "avgMileage": 100000
+        },
+        {
+          "brand": "jetour",
+          "model": "Jetour",
+          "fullName": "jetour Jetour",
+          "count": 6,
+          "avgPrice": 3036600,
+          "avgYear": null,
+          "avgMileage": null
+        },
+        {
+          "brand": "",
+          "model": "2",
+          "fullName": " 2",
+          "count": 5,
+          "avgPrice": 2430000,
+          "avgYear": null,
+          "avgMileage": null
+        },
+        {
+          "brand": "geely",
+          "model": "EX5",
+          "fullName": "geely EX5",
+          "count": 4,
+          "avgPrice": 3974990,
+          "avgYear": null,
+          "avgMileage": 150000
+        },
+        {
+          "brand": "haval",
+          "model": "F7",
+          "fullName": "haval F7",
+          "count": 4,
+          "avgPrice": 2999000,
+          "avgYear": null,
+          "avgMileage": null
+        },
+        {
+          "brand": "citroen",
+          "model": "C4",
+          "fullName": "citroen C4",
+          "count": 4,
+          "avgPrice": 435000,
+          "avgYear": null,
+          "avgMileage": 236150
+        },
+        {
+          "brand": "nissan",
+          "model": "Murano",
+          "fullName": "nissan Murano",
+          "count": 4,
+          "avgPrice": 1468000,
+          "avgYear": null,
+          "avgMileage": 186689
+        },
+        {
+          "brand": "kia",
+          "model": "Ceed",
+          "fullName": "kia Ceed",
+          "count": 4,
+          "avgPrice": 880000,
+          "avgYear": null,
+          "avgMileage": 211826
+        },
+        {
+          "brand": "geely",
+          "model": "Coolray",
+          "fullName": "geely Coolray",
+          "count": 4,
+          "avgPrice": 2894990,
+          "avgYear": null,
+          "avgMileage": 150000
+        },
+        {
+          "brand": "solaris",
+          "model": "Solaris",
+          "fullName": "solaris Solaris",
+          "count": 4,
+          "avgPrice": 1760000,
+          "avgYear": null,
+          "avgMileage": 44198
+        },
+        {
+          "brand": "kia",
+          "model": "Optima",
+          "fullName": "kia Optima",
+          "count": 4,
+          "avgPrice": 1920000,
+          "avgYear": null,
+          "avgMileage": 129225
+        },
+        {
+          "brand": "gaz",
+          "model": "ГАЗель",
+          "fullName": "gaz ГАЗель",
+          "count": 4,
+          "avgPrice": 610000,
+          "avgYear": null,
+          "avgMileage": 49500
+        },
+        {
+          "brand": "mitsubishi",
+          "model": "Outlander",
+          "fullName": "mitsubishi Outlander",
+          "count": 4,
+          "avgPrice": 1780000,
+          "avgYear": null,
+          "avgMileage": 155000
+        },
+        {
+          "brand": "volkswagen",
+          "model": "Golf",
+          "fullName": "volkswagen Golf",
+          "count": 4,
+          "avgPrice": 650000,
+          "avgYear": null,
+          "avgMileage": 170285
+        },
+        {
+          "brand": "bmw",
+          "model": "6",
+          "fullName": "bmw 6",
+          "count": 4,
+          "avgPrice": 1650000,
+          "avgYear": 2005,
+          "avgMileage": 171000
+        },
+        {
+          "brand": "hyundai",
+          "model": "Creta",
+          "fullName": "hyundai Creta",
+          "count": 4,
+          "avgPrice": 1675000,
+          "avgYear": null,
+          "avgMileage": 93458
+        },
+        {
+          "brand": "volkswagen",
+          "model": "Jetta",
+          "fullName": "volkswagen Jetta",
+          "count": 4,
+          "avgPrice": 725000,
+          "avgYear": null,
+          "avgMileage": 127000
+        },
+        {
+          "brand": "gaz",
+          "model": "31105",
+          "fullName": "gaz 31105",
+          "count": 4,
+          "avgPrice": 215000,
+          "avgYear": 2006,
+          "avgMileage": 92000
+        },
+        {
+          "brand": "daewoo",
+          "model": "Nexia",
+          "fullName": "daewoo Nexia",
+          "count": 4,
+          "avgPrice": 100000,
+          "avgYear": null,
+          "avgMileage": 151326
+        },
+        {
+          "brand": "hyundai",
+          "model": "ix35",
+          "fullName": "hyundai ix35",
+          "count": 4,
+          "avgPrice": 1245000,
+          "avgYear": null,
+          "avgMileage": 99248
+        },
+        {
+          "brand": "kia",
+          "model": "Rio",
+          "fullName": "kia Rio",
+          "count": 4,
+          "avgPrice": 660000,
+          "avgYear": null,
+          "avgMileage": 175000
+        },
+        {
+          "brand": "mazda",
+          "model": "Protege",
+          "fullName": "mazda Protege",
+          "count": 4,
+          "avgPrice": 103000,
+          "avgYear": null,
+          "avgMileage": 185000
+        }
+      ],
+      "sampledAt": "2026-07-06T23:40:25.542Z"
+    }
+  },
+  {
+    "date": "2026-07-06",
+    "city": "Волгоград",
+    "stats": {
+      "total": 1284,
+      "avgPrice": 2159912,
+      "medianPrice": 1823500,
+      "minPrice": 100000,
+      "maxPrice": 15000000,
+      "avgYear": 2023,
+      "avgMileage": 137098,
+      "brands": [
+        {
+          "brand": "ВАЗ",
+          "count": 328,
+          "avgPrice": 1332988
+        },
+        {
+          "brand": "от",
+          "count": 171,
+          "avgPrice": 2494974
+        },
+        {
+          "brand": "HAVAL",
+          "count": 124,
+          "avgPrice": 2469903
+        },
+        {
+          "brand": "Geely",
+          "count": 92,
+          "avgPrice": 4230642
+        },
+        {
+          "brand": "TENET",
+          "count": 64,
+          "avgPrice": 2690750
+        },
+        {
+          "brand": "Chery",
+          "count": 44,
+          "avgPrice": 2791727
+        },
+        {
+          "brand": "1",
+          "count": 37,
+          "avgPrice": 1491919
+        },
+        {
+          "brand": "Kia",
+          "count": 36,
+          "avgPrice": 1239444
+        },
+        {
+          "brand": "Hongqi",
+          "count": 36,
+          "avgPrice": 4293667
+        },
+        {
+          "brand": "JAECOO",
+          "count": 24,
+          "avgPrice": 2734500
+        },
+        {
+          "brand": "Москвич",
+          "count": 24,
+          "avgPrice": 2147167
+        },
+        {
+          "brand": "Hyundai",
+          "count": 24,
+          "avgPrice": 1039167
+        },
+        {
+          "brand": "Belgee",
+          "count": 20,
+          "avgPrice": 2570390
+        },
+        {
+          "brand": "Первым",
+          "count": 20,
+          "avgPrice": 100000
+        },
+        {
+          "brand": "Nissan",
+          "count": 20,
+          "avgPrice": 1052400
+        },
+        {
+          "brand": "Toyota",
+          "count": 20,
+          "avgPrice": 1349600
+        },
+        {
+          "brand": "Volkswagen",
+          "count": 20,
+          "avgPrice": 1469800
+        },
+        {
+          "brand": "OMODA",
+          "count": 16,
+          "avgPrice": 2759000
+        },
+        {
+          "brand": "Ford",
+          "count": 12,
+          "avgPrice": 544333
+        },
+        {
+          "brand": "EXEED",
+          "count": 12,
+          "avgPrice": 2046667
+        }
+      ],
+      "models": [
+        {
+          "brand": "ВАЗ",
+          "model": "(LADA)",
+          "fullName": "ВАЗ (LADA)",
+          "count": 328,
+          "avgPrice": 1332988,
+          "avgYear": 2023,
+          "avgMileage": 97336
+        },
+        {
+          "brand": "HAVAL",
+          "model": "Jolion",
+          "fullName": "HAVAL Jolion",
+          "count": 72,
+          "avgPrice": 2365667,
+          "avgYear": 2026,
+          "avgMileage": null
+        },
+        {
+          "brand": "от",
+          "model": "2",
+          "fullName": "от 2",
+          "count": 53,
+          "avgPrice": 2750640,
+          "avgYear": null,
+          "avgMileage": null
+        },
+        {
+          "brand": "Geely",
+          "model": "Monjaro",
+          "fullName": "Geely Monjaro",
+          "count": 52,
+          "avgPrice": 4880375,
+          "avgYear": 2025,
+          "avgMileage": 150000
+        },
+        {
+          "brand": "от",
+          "model": "1",
+          "fullName": "от 1",
+          "count": 49,
+          "avgPrice": 1897653,
+          "avgYear": null,
+          "avgMileage": null
+        },
+        {
+          "brand": "Chery",
+          "model": "Tiggo",
+          "fullName": "Chery Tiggo",
+          "count": 40,
+          "avgPrice": 2855400,
+          "avgYear": 2024,
+          "avgMileage": 149987
+        },
+        {
+          "brand": "HAVAL",
+          "model": "M6",
+          "fullName": "HAVAL M6",
+          "count": 32,
+          "avgPrice": 2199000,
+          "avgYear": 2026,
+          "avgMileage": null
+        },
+        {
+          "brand": "Hongqi",
+          "model": "HS5",
+          "fullName": "Hongqi HS5",
+          "count": 28,
+          "avgPrice": 4599000,
+          "avgYear": null,
+          "avgMileage": null
+        },
+        {
+          "brand": "TENET",
+          "model": "T7",
+          "fullName": "TENET T7",
+          "count": 24,
+          "avgPrice": 2689167,
+          "avgYear": 2025,
+          "avgMileage": 106772
+        },
+        {
+          "brand": "Москвич",
+          "model": "3",
+          "fullName": "Москвич 3",
+          "count": 24,
+          "avgPrice": 2147167,
+          "avgYear": null,
+          "avgMileage": 100000
+        },
+        {
+          "brand": "Geely",
+          "model": "Cityray",
+          "fullName": "Geely Cityray",
+          "count": 20,
+          "avgPrice": 3193990,
+          "avgYear": 2025,
+          "avgMileage": 150000
+        },
+        {
+          "brand": "Первым",
+          "model": "50",
+          "fullName": "Первым 50",
+          "count": 20,
+          "avgPrice": 100000,
+          "avgYear": 2024,
+          "avgMileage": 150000
+        },
+        {
+          "brand": "от",
+          "model": "4",
+          "fullName": "от 4",
+          "count": 18,
+          "avgPrice": 4835493,
+          "avgYear": null,
+          "avgMileage": null
+        },
+        {
+          "brand": "TENET",
+          "model": "T4L",
+          "fullName": "TENET T4L",
+          "count": 16,
+          "avgPrice": 2344000,
+          "avgYear": 2026,
+          "avgMileage": 150000
+        },
+        {
+          "brand": "TENET",
+          "model": "T4",
+          "fullName": "TENET T4",
+          "count": 16,
+          "avgPrice": 2506500,
+          "avgYear": 2026,
+          "avgMileage": 150000
+        },
+        {
+          "brand": "от",
+          "model": "3",
+          "fullName": "от 3",
+          "count": 15,
+          "avgPrice": 3869050,
+          "avgYear": null,
+          "avgMileage": null
+        },
+        {
+          "brand": "JAECOO",
+          "model": "J7",
+          "fullName": "JAECOO J7",
+          "count": 12,
+          "avgPrice": 3179000,
+          "avgYear": null,
+          "avgMileage": 166667
+        },
+        {
+          "brand": "Ford",
+          "model": "Focus",
+          "fullName": "Ford Focus",
+          "count": 12,
+          "avgPrice": 544333,
+          "avgYear": 2010,
+          "avgMileage": 193794
+        },
+        {
+          "brand": "Kia",
+          "model": "Cerato",
+          "fullName": "Kia Cerato",
+          "count": 12,
+          "avgPrice": 1060000,
+          "avgYear": 2024,
+          "avgMileage": 212070
+        },
+        {
+          "brand": "OMODA",
+          "model": "C5",
+          "fullName": "OMODA C5",
+          "count": 12,
+          "avgPrice": 2579000,
+          "avgYear": null,
+          "avgMileage": 100000
+        },
+        {
+          "brand": "Geely",
+          "model": "Atlas",
+          "fullName": "Geely Atlas",
+          "count": 12,
+          "avgPrice": 3673323,
+          "avgYear": null,
+          "avgMileage": 150000
+        },
+        {
+          "brand": "JAECOO",
+          "model": "J6",
+          "fullName": "JAECOO J6",
+          "count": 12,
+          "avgPrice": 2290000,
+          "avgYear": null,
+          "avgMileage": 100000
+        },
+        {
+          "brand": "Hyundai",
+          "model": "Creta",
+          "fullName": "Hyundai Creta",
+          "count": 12,
+          "avgPrice": 1325000,
+          "avgYear": null,
+          "avgMileage": 81989
+        },
+        {
+          "brand": "HAVAL",
+          "model": "Dargo",
+          "fullName": "HAVAL Dargo",
+          "count": 8,
+          "avgPrice": 3799000,
+          "avgYear": null,
+          "avgMileage": null
+        },
+        {
+          "brand": "Belgee",
+          "model": "X50+",
+          "fullName": "Belgee X50+",
+          "count": 8,
+          "avgPrice": 2594990,
+          "avgYear": null,
+          "avgMileage": 150000
+        },
+        {
+          "brand": "TENET",
+          "model": "T8",
+          "fullName": "TENET T8",
+          "count": 8,
+          "avgPrice": 3757500,
+          "avgYear": 2025,
+          "avgMileage": 150000
+        },
+        {
+          "brand": "HAVAL",
+          "model": "F7x",
+          "fullName": "HAVAL F7x",
+          "count": 8,
+          "avgPrice": 2898000,
+          "avgYear": 2023,
+          "avgMileage": 71253
+        },
+        {
+          "brand": "Citroen",
+          "model": "C4",
+          "fullName": "Citroen C4",
+          "count": 8,
+          "avgPrice": 332500,
+          "avgYear": null,
+          "avgMileage": 188075
+        },
+        {
+          "brand": "Toyota",
+          "model": "Avensis",
+          "fullName": "Toyota Avensis",
+          "count": 8,
+          "avgPrice": 1099000,
+          "avgYear": null,
+          "avgMileage": 196584
+        },
+        {
+          "brand": "EXEED",
+          "model": "LX",
+          "fullName": "EXEED LX",
+          "count": 8,
+          "avgPrice": 1670000,
+          "avgYear": 2024,
+          "avgMileage": 84469
+        },
+        {
+          "brand": "Belgee",
+          "model": "X70",
+          "fullName": "Belgee X70",
+          "count": 8,
+          "avgPrice": 2762990,
+          "avgYear": null,
+          "avgMileage": 150000
+        },
+        {
+          "brand": "Hongqi",
+          "model": "HS3",
+          "fullName": "Hongqi HS3",
+          "count": 8,
+          "avgPrice": 3225000,
+          "avgYear": null,
+          "avgMileage": null
+        },
+        {
+          "brand": "Nissan",
+          "model": "Qashqai",
+          "fullName": "Nissan Qashqai",
+          "count": 8,
+          "avgPrice": 1315000,
+          "avgYear": null,
+          "avgMileage": 170483
+        },
+        {
+          "brand": "Volkswagen",
+          "model": "Jetta",
+          "fullName": "Volkswagen Jetta",
+          "count": 8,
+          "avgPrice": 712500,
+          "avgYear": null,
+          "avgMileage": 177000
+        },
+        {
+          "brand": "Kia",
+          "model": "K5",
+          "fullName": "Kia K5",
+          "count": 8,
+          "avgPrice": 1745000,
+          "avgYear": null,
+          "avgMileage": 86872
+        },
+        {
+          "brand": "Kia",
+          "model": "Rio",
+          "fullName": "Kia Rio",
+          "count": 8,
+          "avgPrice": 842500,
+          "avgYear": 2016,
+          "avgMileage": 128913
+        },
+        {
+          "brand": "Great Wall",
+          "model": "Hover",
+          "fullName": "Great Wall Hover",
+          "count": 8,
+          "avgPrice": 656500,
+          "avgYear": 2012,
+          "avgMileage": 135772
+        },
+        {
+          "brand": "Hoвый",
+          "model": "Omoda",
+          "fullName": "Hoвый Omoda",
+          "count": 6,
+          "avgPrice": 15000000,
+          "avgYear": null,
+          "avgMileage": 100000
+        },
+        {
+          "brand": "Новый",
+          "model": "Jaecoo",
+          "fullName": "Новый Jaecoo",
+          "count": 6,
+          "avgPrice": 15000000,
+          "avgYear": null,
+          "avgMileage": 100000
+        },
+        {
+          "brand": "от",
+          "model": "940",
+          "fullName": "от 940",
+          "count": 5,
+          "avgPrice": 1246000,
+          "avgYear": null,
+          "avgMileage": null
+        },
+        {
+          "brand": "от",
+          "model": "880",
+          "fullName": "от 880",
+          "count": 5,
+          "avgPrice": 1195000,
+          "avgYear": null,
+          "avgMileage": null
+        },
+        {
+          "brand": "Geely",
+          "model": "EX5",
+          "fullName": "Geely EX5",
+          "count": 4,
+          "avgPrice": 3974990,
+          "avgYear": null,
+          "avgMileage": 150000
+        },
+        {
+          "brand": "HAVAL",
+          "model": "F7",
+          "fullName": "HAVAL F7",
+          "count": 4,
+          "avgPrice": 2999000,
+          "avgYear": null,
+          "avgMileage": null
+        },
+        {
+          "brand": "EXEED",
+          "model": "VX",
+          "fullName": "EXEED VX",
+          "count": 4,
+          "avgPrice": 2800000,
+          "avgYear": null,
+          "avgMileage": 49989
+        },
+        {
+          "brand": "Nissan",
+          "model": "Murano",
+          "fullName": "Nissan Murano",
+          "count": 4,
+          "avgPrice": 1468000,
+          "avgYear": null,
+          "avgMileage": 186689
+        },
+        {
+          "brand": "Renault",
+          "model": "Kaptur",
+          "fullName": "Renault Kaptur",
+          "count": 4,
+          "avgPrice": 1730000,
+          "avgYear": null,
+          "avgMileage": 84015
+        },
+        {
+          "brand": "Geely",
+          "model": "Coolray",
+          "fullName": "Geely Coolray",
+          "count": 4,
+          "avgPrice": 2894990,
+          "avgYear": null,
+          "avgMileage": 150000
+        },
+        {
+          "brand": "Kia",
+          "model": "Ceed",
+          "fullName": "Kia Ceed",
+          "count": 4,
+          "avgPrice": 880000,
+          "avgYear": null,
+          "avgMileage": 211826
+        },
+        {
+          "brand": "1",
+          "model": "216",
+          "fullName": "1 216",
+          "count": 4,
+          "avgPrice": 1216000,
+          "avgYear": null,
+          "avgMileage": null
+        },
+        {
+          "brand": "Jetour",
+          "model": "T1",
+          "fullName": "Jetour T1",
+          "count": 4,
+          "avgPrice": 4199900,
+          "avgYear": null,
+          "avgMileage": null
+        }
+      ],
+      "sampledAt": "2026-07-06T23:41:56.001Z"
+    }
   }
 ]
