@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>РемонтСервис — ремонт под ключ</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', -apple-system, sans-serif; color: #1a1a1a; overflow-x: hidden; }
+
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(rgba(15,12,41,0.8), rgba(36,36,62,0.9)),
+        url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1200&h=800&fit=crop&auto=format');
+      background-size: cover; background-position: center;
+      display: flex; align-items: center; justify-content: center; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.03), transparent, rgba(255,255,255,0.03), transparent);
+      animation: rotate 20s linear infinite;
+    }
+    @keyframes rotate { to { transform: rotate(360deg); } }
+    .hero-content { position: relative; z-index: 1; padding: 20px; }
+    .hero h1 { font-size: clamp(36px, 8vw, 72px); color: white; margin-bottom: 12px; animation: fadeUp 1s ease; }
+    .hero p { font-size: clamp(16px, 3vw, 22px); color: rgba(255,255,255,0.7); margin-bottom: 32px; animation: fadeUp 1s ease 0.2s both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .btn { display: inline-block; padding: 16px 48px; background: linear-gradient(135deg, #f093fb, #f5576c); color: white; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 16px; transition: transform 0.3s, box-shadow 0.3s; animation: fadeUp 1s ease 0.4s both; }
+    .btn:hover { transform: scale(1.05); box-shadow: 0 10px 40px rgba(245,87,108,0.4); }
+
+    .parallax {
+      background: #f8f9fa; padding: 80px 20px; position: relative;
+    }
+    .parallax-inner { max-width: 1100px; margin: 0 auto; }
+    .section-title { font-size: clamp(24px, 5vw, 36px); text-align: center; margin-bottom: 50px; font-weight: 700; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 24px; }
+    .card {
+      background: white; padding: 32px 24px; border-radius: 16px; text-align: center;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06); transition: transform 0.3s, box-shadow 0.3s; cursor: default;
+    }
+    .card:hover { transform: translateY(-8px); box-shadow: 0 12px 48px rgba(0,0,0,0.12); }
+    .card .icon { font-size: 40px; margin-bottom: 12px; }
+    .card h3 { font-size: 20px; margin-bottom: 8px; }
+    .card p { color: #666; line-height: 1.6; font-size: 14px; }
+
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 20px; margin: 60px 0; }
+    .stat { text-align: center; padding: 20px; }
+    .stat-num { font-size: 42px; font-weight: 800; background: linear-gradient(135deg, #f093fb, #f5576c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-label { color: #666; font-size: 14px; margin-top: 4px; }
+
+    .steps { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin: 40px 0; }
+    .step { background: white; border-radius: 16px; padding: 20px 24px; flex: 1; min-width: 200px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 12px; }
+    .step-num { width: 32px; height: 32px; background: linear-gradient(135deg, #f093fb, #f5576c); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+
+    .contacts { padding: 80px 20px; text-align: center; background: linear-gradient(135deg, #0f0c29, #302b63); color: white; }
+    .contacts .phone { font-size: clamp(24px, 4vw, 36px); font-weight: 700; margin: 12px 0; }
+    .contacts .info { color: rgba(255,255,255,0.6); line-height: 1.8; font-size: 16px; }
+
+    .footer { background: #0f0c29; color: rgba(255,255,255,0.4); text-align: center; padding: 20px; font-size: 14px; }
+
+    @media (max-width: 600px) {
+      .step { min-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="hero-content">
+      <h1>РемонтСервис</h1>
+      <p>Ремонт квартир и офисов в Москве — под ключ за 30 дней</p>
+      <a href="#contacts" class="btn">Рассчитать стоимость</a>
+    </div>
+  </section>
+
+  <section class="parallax">
+    <div class="parallax-inner">
+      <h2 class="section-title">Наши услуги</h2>
+      <div class="grid">
+        <div class="card"><div class="icon"><img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=60&h=60&fit=crop&auto=format" style="width:48px;height:48px;border-radius:8px;object-fit:cover" alt=""></div><h3>Косметический ремонт</h3><p>Покраска, обои, напольные покрытия, замена сантехники. От 5 000₽/м²</p></div>
+        <div class="card"><div class="icon"><img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?w=60&h=60&fit=crop&auto=format" style="width:48px;height:48px;border-radius:8px;object-fit:cover" alt=""></div><h3>Капитальный ремонт</h3><p>Перепланировка, стяжка, электрика, санузел под ключ. От 10 000₽/м²</p></div>
+        <div class="card"><div class="icon"><img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=60&h=60&fit=crop&auto=format" style="width:48px;height:48px;border-radius:8px;object-fit:cover" alt=""></div><h3>Дизайн-проект</h3><p>3D визуализация, планировка, подбор материалов. От 1 500₽/м²</p></div>
+        <div class="card"><div class="icon"><img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=60&h=60&fit=crop&auto=format" style="width:48px;height:48px;border-radius:8px;object-fit:cover" alt=""></div><h3>Отделка офисов</h3><p>Быстрое и качественное решение. От 7 000₽/м²</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="parallax" style="background:#fff">
+    <div class="parallax-inner">
+      <h2 class="section-title">Ремонт за 3 шага</h2>
+      <div class="steps">
+        <div class="step"><span class="step-num">1</span> Заявка или звонок</div>
+        <div class="step"><span class="step-num">2</span> Бесплатный замер и смета</div>
+        <div class="step"><span class="step-num">3</span> Ремонт под ключ с гарантией</div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="stat-num">200+</div><div class="stat-label">Объектов сдано</div></div>
+        <div class="stat"><div class="stat-num">2 года</div><div class="stat-label">Гарантии</div></div>
+        <div class="stat"><div class="stat-num">15 лет</div><div class="stat-label">На рынке</div></div>
+        <div class="stat"><div class="stat-num">97%</div><div class="stat-label">Довольных клиентов</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contacts" id="contacts">
+    <h2 style="font-size:28px;margin-bottom:8px;">Свяжитесь с нами</h2>
+    <div class="phone">+7 (999) 123-45-67</div>
+    <div class="info">
+      <p>info@remont-service.ru</p>
+      <p>г. Москва, ул. Строителей, 15</p>
+      <p>Пн-Пт: 9:00-20:00 | Сб: 10:00-18:00</p>
+    </div>
+  </section>
+
+  <footer class="footer">© 2026 РемонтСервис. Все права защищены.</footer>
+</body>
+</html>

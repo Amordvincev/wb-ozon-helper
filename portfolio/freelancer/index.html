@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Арсений — разработчик</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'SF Mono', 'Fira Code', monospace; background: #050508; color: #e0e0e0; overflow-x: hidden; }
+
+    /* Matrix rain canvas */
+    #matrix { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.15; }
+
+    /* Floating orbs */
+    .orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; animation: orbFloat 12s ease-in-out infinite; }
+    .orb:nth-child(1) { width: 400px; height: 400px; background: rgba(0,255,136,0.08); top: -10%; left: -5%; animation-delay: 0s; }
+    .orb:nth-child(2) { width: 350px; height: 350px; background: rgba(100,0,255,0.08); bottom: -5%; right: -5%; animation-delay: 4s; }
+    .orb:nth-child(3) { width: 300px; height: 300px; background: rgba(255,0,100,0.06); top: 50%; left: 50%; animation-delay: 8s; }
+    @keyframes orbFloat { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
+
+    /* Hero with glitch */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center;
+      position: relative; z-index: 1; overflow: hidden;
+    }
+    .hero-content { position: relative; z-index: 2; padding: 20px; max-width: 800px; }
+    .hero .glitch-wrapper { position: relative; display: inline-block; margin-bottom: 8px; }
+    .hero h1 {
+      font-size: clamp(32px, 7vw, 64px); color: white; position: relative; z-index: 2;
+      text-shadow: 0 0 20px rgba(0,255,136,0.3);
+    }
+    .hero h1::before, .hero h1::after {
+      content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+    }
+    .hero h1::before { color: #00ff88; animation: glitch1 3s infinite; clip-path: inset(0 0 80% 0); }
+    .hero h1::after { color: #ff00aa; animation: glitch2 3s infinite; clip-path: inset(80% 0 0 0); }
+    @keyframes glitch1 { 0%,5%,100% { transform: translate(0); } 1% { transform: translate(-3px,2px); } 2% { transform: translate(2px,-1px); } 3% { transform: translate(-1px,3px); } }
+    @keyframes glitch2 { 0%,5%,100% { transform: translate(0); } 1% { transform: translate(3px,-2px); } 2% { transform: translate(-2px,1px); } 3% { transform: translate(1px,-3px); } }
+    .hero .tagline { color: #666; font-size: clamp(14px, 2vw, 18px); margin-bottom: 12px; letter-spacing: 2px; }
+    .hero .typewriter {
+      color: #00ff88; font-size: clamp(16px, 2.5vw, 20px); min-height: 1.5em;
+      border-right: 2px solid #00ff88; display: inline-block; padding-right: 4px;
+      animation: twBlink 0.8s step-end infinite;
+    }
+    @keyframes twBlink { 50% { border-color: transparent; } }
+
+    .hero .skills-line { margin-top: 28px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .hero .skills-line span {
+      padding: 8px 20px; border: 1px solid rgba(0,255,136,0.15); border-radius: 20px; font-size: 13px;
+      color: #888; transition: 0.4s; cursor: default; position: relative; overflow: hidden;
+    }
+    .hero .skills-line span::before {
+      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0,255,136,0.1), transparent);
+      transition: 0.6s;
+    }
+    .hero .skills-line span:hover::before { left: 100%; }
+    .hero .skills-line span:hover { border-color: #00ff88; color: #00ff88; box-shadow: 0 0 20px rgba(0,255,136,0.15); }
+
+    /* Smooth scroll indicator */
+    .scroll-indicator {
+      position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 2;
+      display: flex; flex-direction: column; align-items: center; gap: 8px; color: #333; font-size: 11px; letter-spacing: 2px;
+      animation: fadeInDown 2s ease 1s both;
+    }
+    .scroll-indicator .mouse { width: 24px; height: 38px; border: 2px solid #333; border-radius: 12px; position: relative; }
+    .scroll-indicator .mouse::after {
+      content: ''; position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+      width: 2px; height: 8px; background: #00ff88; border-radius: 2px; animation: scrollWheel 1.5s ease infinite;
+    }
+    @keyframes scrollWheel { 0% { opacity: 1; transform: translateX(-50%) translateY(0); } 100% { opacity: 0; transform: translateX(-50%) translateY(12px); } }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateX(-50%) translateY(-10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+    /* Nav bar */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 16px 24px; display: flex; justify-content: center; gap: 32px;
+      background: rgba(5,5,8,0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .nav a { color: #555; text-decoration: none; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; transition: 0.3s; }
+    .nav a:hover { color: #00ff88; }
+    .nav a .dot { color: #00ff88; opacity: 0; transition: 0.3s; }
+    .nav a:hover .dot { opacity: 1; }
+
+    /* Sections */
+    .section { padding: 100px 20px 80px; max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+    .section-title {
+      font-size: 13px; color: #00ff88; text-transform: uppercase; letter-spacing: 5px; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(0,255,136,0.3), transparent); }
+    .section-heading { font-size: clamp(24px, 4vw, 36px); color: white; margin-bottom: 40px; }
+
+    /* Projects */
+    .work-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 20px; }
+    .work-card {
+      background: linear-gradient(145deg, #0c0c14, #111118); border-radius: 16px; padding: 0; overflow: hidden;
+      border: 1px solid #1a1a2e; transition: 0.4s; cursor: default; position: relative;
+    }
+    .work-card::before {
+      content: ''; position: absolute; top: -1px; left: -1px; right: -1px; bottom: -1px;
+      border-radius: 17px; background: linear-gradient(135deg, transparent, transparent, transparent, #00ff88, transparent, transparent);
+      opacity: 0; transition: 0.6s; z-index: -1;
+    }
+    .work-card:hover::before { opacity: 1; }
+    .work-card:hover { border-color: transparent; transform: translateY(-6px); }
+    .work-card .thumb { width: 100%; height: 160px; overflow: hidden; }
+    .work-card .thumb img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+    .work-card:hover .thumb img { transform: scale(1.1); }
+    .work-card .body { padding: 20px 24px 24px; }
+    .work-card h3 { color: white; font-size: 17px; margin-bottom: 8px; }
+    .work-card p { color: #666; font-size: 13px; line-height: 1.6; margin-bottom: 12px; }
+    .work-card .tag { display: inline-block; padding: 3px 12px; background: rgba(0,255,136,0.08); color: #00ff88; border-radius: 4px; font-size: 11px; letter-spacing: 1px; }
+
+    /* Skills bars */
+    .skills-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 40px 0; }
+    .skill-bar { }
+    .skill-bar .label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+    .skill-bar .label .name { color: #ccc; }
+    .skill-bar .label .pct { color: #00ff88; }
+    .skill-bar .track { height: 4px; background: #1a1a2e; border-radius: 4px; overflow: hidden; }
+    .skill-bar .fill { height: 100%; background: linear-gradient(90deg, #00ff88, #00cc6a); border-radius: 4px; width: 0; transition: 1.5s ease; }
+    .skill-bar.visible .fill { width: var(--pct); }
+
+    /* Price table */
+    .price-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 12px; }
+    .price-card {
+      background: #0c0c14; border: 1px solid #1a1a2e; border-radius: 12px; padding: 24px; text-align: center;
+      transition: 0.3s; cursor: default;
+    }
+    .price-card:hover { border-color: #00ff88; transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,255,136,0.06); }
+    .price-card .title { font-size: 14px; color: #888; margin-bottom: 8px; }
+    .price-card .value { font-size: 24px; font-weight: 700; color: #00ff88; }
+    .price-card .sub { font-size: 12px; color: #444; margin-top: 4px; }
+
+    /* Contact */
+    .contact-section {
+      text-align: center; padding: 100px 20px; position: relative; z-index: 1;
+    }
+    .contact-section .big-link {
+      display: inline-block; font-size: clamp(20px, 4vw, 36px); color: #00ff88;
+      text-decoration: none; border-bottom: 1px solid rgba(0,255,136,0.2); padding-bottom: 4px;
+      transition: 0.3s; margin-top: 20px;
+    }
+    .contact-section .big-link:hover { border-color: #00ff88; text-shadow: 0 0 40px rgba(0,255,136,0.3); }
+    .contact-section .socials { display: flex; gap: 20px; justify-content: center; margin-top: 24px; }
+    .contact-section .socials a { color: #444; font-size: 14px; text-decoration: none; transition: 0.3s; }
+    .contact-section .socials a:hover { color: #00ff88; }
+
+    /* Footer */
+    .footer { text-align: center; padding: 24px; color: #222; font-size: 12px; position: relative; z-index: 1; }
+
+    /* Scroll reveals */
+    .reveal { opacity: 0; transform: translateY(40px); transition: 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left { opacity: 0; transform: translateX(-40px); transition: 0.8s ease; }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right { opacity: 0; transform: translateX(40px); transition: 0.8s ease; }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+    @media (max-width: 700px) {
+      .skills-wrap { grid-template-columns: 1fr; }
+      .nav { gap: 16px; }
+      .nav a { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Orbs -->
+  <div class="orb"></div><div class="orb"></div><div class="orb"></div>
+  <!-- Matrix -->
+  <canvas id="matrix"></canvas>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <a href="#projects"><span class="dot">.</span>Проекты</a>
+    <a href="#skills"><span class="dot">.</span>Навыки</a>
+    <a href="#prices"><span class="dot">.</span>Цены</a>
+    <a href="#contact"><span class="dot">.</span>Контакты</a>
+  </nav>
+
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <p class="tagline">// full-stack developer</p>
+      <div class="glitch-wrapper">
+        <h1 data-text="Арсений">Арсений</h1>
+      </div>
+      <div><span class="typewriter" id="typewriter"></span></div>
+      <div class="skills-line">
+        <span>Node.js</span><span>JavaScript</span><span>Python</span>
+        <span>Telegram API</span><span>Chrome Extensions</span><span>SQLite</span>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <div class="mouse"></div>
+      scroll
+    </div>
+  </section>
+
+  <section class="section" id="projects">
+    <div class="section-title">Портфолио</div>
+    <h2 class="section-heading reveal">Проекты</h2>
+    <div class="work-grid">
+      <div class="work-card reveal-left">
+        <div class="thumb"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=300&fit=crop&auto=format" alt=""></div>
+        <div class="body">
+          <h3>WB-Ozon Helper</h3>
+          <p>Браузерное расширение с графиками цен, историей, анализом продавца. 100+ установок.</p>
+          <span class="tag">Chrome Extension</span>
+        </div>
+      </div>
+      <div class="work-card reveal">
+        <div class="thumb"><img src="https://images.unsplash.com/photo-1611605698335-8b1569810432?w=600&h=300&fit=crop&auto=format" alt=""></div>
+        <div class="body">
+          <h3>Telegram Price Monitor</h3>
+          <p>Бот для отслеживания скидок на Ozon и WB с уведомлениями в реальном времени.</p>
+          <span class="tag">Telegram Bot</span>
+        </div>
+      </div>
+      <div class="work-card reveal-right">
+        <div class="thumb"><img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=300&fit=crop&auto=format" alt=""></div>
+        <div class="body">
+          <h3>Parser → Google Sheets</h3>
+          <p>Автоматический сбор цен конкурентов с маркетплейсов в Google Таблицу каждый час.</p>
+          <span class="tag">Parser</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="skills">
+    <div class="section-title">Компетенции</div>
+    <h2 class="section-heading reveal">Навыки</h2>
+    <div class="skills-wrap">
+      <div class="skill-bar reveal"><div class="label"><span class="name">Node.js</span><span class="pct">95%</span></div><div class="track"><div class="fill" style="--pct:95%"></div></div></div>
+      <div class="skill-bar reveal"><div class="label"><span class="name">JavaScript</span><span class="pct">90%</span></div><div class="track"><div class="fill" style="--pct:90%"></div></div></div>
+      <div class="skill-bar reveal"><div class="label"><span class="name">Python</span><span class="pct">85%</span></div><div class="track"><div class="fill" style="--pct:85%"></div></div></div>
+      <div class="skill-bar reveal"><div class="label"><span class="name">Telegram API</span><span class="pct">92%</span></div><div class="track"><div class="fill" style="--pct:92%"></div></div></div>
+      <div class="skill-bar reveal"><div class="label"><span class="name">Chrome Extensions</span><span class="pct">80%</span></div><div class="track"><div class="fill" style="--pct:80%"></div></div></div>
+      <div class="skill-bar reveal"><div class="label"><span class="name">SQLite / SQL</span><span class="pct">88%</span></div><div class="track"><div class="fill" style="--pct:88%"></div></div></div>
+    </div>
+  </section>
+
+  <section class="section" id="prices">
+    <div class="section-title">Прайс-лист</div>
+    <h2 class="section-heading reveal">Цены</h2>
+    <div class="price-wrap">
+      <div class="price-card reveal"><div class="title">Telegram-бот</div><div class="value">от 3 000₽</div><div class="sub">любой сложности</div></div>
+      <div class="price-card reveal"><div class="title">Сайт-визитка</div><div class="value">от 5 000₽</div><div class="sub">адаптивный дизайн</div></div>
+      <div class="price-card reveal"><div class="title">Парсер</div><div class="value">от 2 000₽</div><div class="sub">любой сайт</div></div>
+      <div class="price-card reveal"><div class="title">Расширение</div><div class="value">от 3 000₽</div><div class="sub">Chrome / Firefox</div></div>
+    </div>
+  </section>
+
+  <section class="contact-section" id="contact">
+    <div class="section-title" style="justify-content:center;">Связь</div>
+    <h2 class="section-heading reveal" style="margin-bottom:0;">Готовы обсудить проект?</h2>
+    <a class="big-link reveal" href="mailto:senixc@example.com">senixc@example.com</a>
+    <div class="socials reveal">
+      <a href="#">Telegram</a>
+      <a href="#">GitHub</a>
+      <a href="#">Kwork</a>
+    </div>
+  </section>
+
+  <footer class="footer">© 2026</footer>
+
+  <script>
+    // Matrix rain
+    const c = document.getElementById('matrix');
+    const ctx = c.getContext('2d');
+    function resizeCanvas() { c.width = window.innerWidth; c.height = window.innerHeight; }
+    resizeCanvas(); window.addEventListener('resize', resizeCanvas);
+    const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789';
+    const fontSize = 14;
+    const cols = Math.floor(c.width / fontSize);
+    const drops = Array(cols).fill(1);
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(5,5,8,0.05)';
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.fillStyle = '#00ff88';
+      ctx.font = fontSize + 'px monospace';
+      for (let i = 0; i < drops.length; i++) {
+        const char = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > c.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    }
+    setInterval(drawMatrix, 50);
+
+    // Typewriter
+    const phrases = ['Telegram-боты', 'Парсеры', 'Сайты под ключ', 'Расширения для браузера', 'Автоматизация'];
+    let phraseIdx = 0, charIdx = 0, isDeleting = false;
+    const tw = document.getElementById('typewriter');
+    function typewriterEffect() {
+      const current = phrases[phraseIdx];
+      if (!isDeleting) {
+        tw.textContent = current.substring(0, charIdx + 1);
+        charIdx++;
+        if (charIdx === current.length) { isDeleting = true; setTimeout(typewriterEffect, 2000); return; }
+        setTimeout(typewriterEffect, 80);
+      } else {
+        tw.textContent = current.substring(0, charIdx - 1);
+        charIdx--;
+        if (charIdx === 0) { isDeleting = false; phraseIdx = (phraseIdx + 1) % phrases.length; }
+        setTimeout(typewriterEffect, 40);
+      }
+    }
+    typewriterEffect();
+
+    // Scroll reveals
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // Trigger skill bars
+          if (entry.target.classList.contains('skill-bar')) {
+            entry.target.classList.add('visible');
+          }
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .skill-bar').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

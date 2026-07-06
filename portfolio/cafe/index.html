@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CAFE — кофе и выпечка</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Georgia', serif; color: #2c1810; overflow-x: hidden; }
+
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(rgba(44,24,16,0.6), rgba(44,24,16,0.8)),
+        url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=1200&h=800&fit=crop&auto=format');
+      background-size: cover; display: flex; align-items: center; justify-content: center; text-align: center;
+      position: relative;
+    }
+    .hero-content { animation: fadeIn 1.5s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .hero h1 { font-size: clamp(40px, 8vw, 80px); color: white; font-weight: 400; letter-spacing: 4px; margin-bottom: 8px; }
+    .hero p { font-size: clamp(16px, 3vw, 22px); color: rgba(255,255,255,0.7); font-style: italic; margin-bottom: 32px; }
+    .btn { display: inline-block; padding: 14px 48px; background: #d4a574; color: white; text-decoration: none; font-size: 15px; letter-spacing: 2px; transition: 0.3s; }
+    .btn:hover { background: #c49464; transform: translateY(-2px); }
+
+    .menu-section {
+      padding: 80px 20px; max-width: 1000px; margin: 0 auto;
+    }
+    .section-title {
+      text-align: center; font-size: 14px; text-transform: uppercase; letter-spacing: 6px; color: #d4a574; margin-bottom: 8px; font-family: -apple-system, sans-serif;
+    }
+    .section-subtitle { text-align: center; font-size: 28px; margin-bottom: 48px; color: #2c1810; }
+
+    .menu-category { margin-bottom: 40px; }
+    .menu-category h3 { font-size: 20px; margin-bottom: 16px; border-bottom: 1px solid #eee; padding-bottom: 8px; color: #2c1810; }
+    .menu-items { display: grid; gap: 12px; }
+    .menu-item {
+      display: flex; justify-content: space-between; padding: 12px 16px;
+      background: #faf6f0; border-radius: 8px; transition: 0.3s; cursor: default;
+    }
+    .menu-item:hover { background: #f5ede4; transform: translateX(8px); }
+    .menu-item .name { font-size: 17px; }
+    .menu-item .name span { font-size: 13px; color: #999; margin-left: 8px; }
+    .menu-item .price { color: #d4a574; font-weight: 700; font-size: 17px; }
+
+    .gallery {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 8px; margin: 40px 0;
+    }
+    .gallery-item {
+      position: relative; border-radius: 8px; overflow: hidden; height: 240px; cursor: default;
+    }
+    .gallery-item .bg {
+      width: 100%; height: 100%; object-fit: cover;
+      background: linear-gradient(135deg, #2c1810, #4a3228);
+      transition: 0.5s;
+    }
+    .gallery-item:hover .bg { transform: scale(1.1); }
+    .gallery-item .overlay {
+      position: absolute; bottom: 0; left: 0; right: 0; padding: 12px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.6)); color: white; font-size: 13px; opacity: 0; transition: 0.3s;
+    }
+    .gallery-item:hover .overlay { opacity: 1; }
+
+    .about { background: #faf6f0; padding: 80px 20px; text-align: center; }
+    .about-content { max-width: 700px; margin: 0 auto; line-height: 1.8; color: #555; font-size: 16px; }
+
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 24px; margin: 40px 0; }
+    .feature { text-align: center; padding: 20px; }
+    .feature .icon { font-size: 36px; margin-bottom: 12px; display: block; }
+    .feature h4 { font-size: 16px; margin-bottom: 6px; }
+    .feature p { color: #888; font-size: 13px; }
+
+    .footer-section { background: #2c1810; color: white; text-align: center; padding: 60px 20px; }
+    .footer-section h3 { font-size: 28px; font-weight: 400; margin-bottom: 12px; }
+    .footer-section p { opacity: 0.7; line-height: 1.8; font-size: 15px; margin-bottom: 4px; }
+    .footer-section .big { font-size: 20px; opacity: 1; font-weight: 600; }
+
+    .copyright { text-align: center; padding: 16px; color: #999; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="hero-content">
+      <h1>CAFE</h1>
+      <p>кофе, выпечка, уют</p>
+      <a href="#menu" class="btn">МЕНЮ</a>
+    </div>
+  </section>
+
+  <section class="menu-section" id="menu">
+    <div class="section-title">Наше меню</div>
+    <div class="section-subtitle">Что попробовать?</div>
+
+    <div class="gallery">
+      <div class="gallery-item"><img class="bg" src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=300&fit=crop&auto=format" alt=""><div class="overlay">Авторский кофе</div></div>
+      <div class="gallery-item"><img class="bg" src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&h=300&fit=crop&auto=format" alt=""><div class="overlay">Круассаны</div></div>
+      <div class="gallery-item"><img class="bg" src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=300&fit=crop&auto=format" alt=""><div class="overlay">Чизкейки</div></div>
+      <div class="gallery-item"><img class="bg" src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400&h=300&fit=crop&auto=format" alt=""><div class="overlay">Сэндвичи</div></div>
+    </div>
+
+    <div class="menu-category">
+      <h3>Кофе</h3>
+      <div class="menu-items">
+        <div class="menu-item"><span class="name">Эспрессо <span>40 мл</span></span><span class="price">250₽</span></div>
+        <div class="menu-item"><span class="name">Капучино <span>350 мл</span></span><span class="price">350₽</span></div>
+        <div class="menu-item"><span class="name">Латте <span>400 мл</span></span><span class="price">380₽</span></div>
+        <div class="menu-item"><span class="name">Раф <span>350 мл</span></span><span class="price">420₽</span></div>
+      </div>
+    </div>
+
+    <div class="menu-category">
+      <h3>Выпечка</h3>
+      <div class="menu-items">
+        <div class="menu-item"><span class="name">Круассан с миндалём</span><span class="price">250₽</span></div>
+        <div class="menu-item"><span class="name">Чизкейк Нью-Йорк</span><span class="price">380₽</span></div>
+        <div class="menu-item"><span class="name">Сэндвич с лососем</span><span class="price">450₽</span></div>
+        <div class="menu-item"><span class="name">Шоколадный брауни</span><span class="price">320₽</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="about">
+    <div class="section-title">О нас</div>
+    <div class="section-subtitle">Кофе с характером</div>
+    <div class="about-content">
+      <p>Мы сами обжариваем зерно из Бразилии, Эфиопии и Колумбии. Каждое утро печём свежую выпечку — без заморозки и консервантов. У нас тихо, тепло и пахнет корицей.</p>
+    </div>
+
+    <div class="features">
+      <div class="feature"><span class="icon"><img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=60&h=60&fit=crop&auto=format" style="width:48px;height:48px;border-radius:50%;object-fit:cover" alt=""></span><h4>Авторская обжарка</h4><p>Свежая обжарка каждую неделю</p></div>
+      <div class="feature"><span class="icon"><img src="https://images.unsplash.com/photo-1509365465985-25d11c17e812?w=60&h=60&fit=crop&auto=format" style="width:48px;height:48px;border-radius:50%;object-fit:cover" alt=""></span><h4>Свежая выпечка</h4><p>Печём каждое утро с 6:00</p></div>
+      <div class="feature"><span class="icon"><img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=60&h=60&fit=crop&auto=format" style="width:48px;height:48px;border-radius:50%;object-fit:cover" alt=""></span><h4>WiFi 200 Мбит</h4><p>Розетки у каждого стола</p></div>
+      <div class="feature"><span class="icon"><img src="https://images.unsplash.com/photo-1544568100-847a948585b9?w=60&h=60&fit=crop&auto=format" style="width:48px;height:48px;border-radius:50%;object-fit:cover" alt=""></span><h4>Можно с питомцем</h4><p>Вода и печеньки для собак</p></div>
+    </div>
+  </section>
+
+  <section class="footer-section">
+    <h3>Ждём вас</h3>
+    <p>г. Москва, ул. Тверская, 15</p>
+    <p>Ежедневно: 8:00 — 23:00</p>
+    <p class="big">+7 (999) 888-77-66</p>
+  </section>
+
+  <div class="copyright">© 2026 CAFE</div>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillPro — онлайн-курсы</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', -apple-system, sans-serif; color: #111; overflow-x: hidden; }
+
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(rgba(15,12,41,0.85), rgba(36,11,54,0.9)),
+        url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&h=800&fit=crop&auto=format');
+      background-size: cover; background-position: center;
+      display: flex; align-items: center; justify-content: center; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero-grid {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 50px 50px; perspective: 500px;
+      animation: gridMove 8s linear infinite;
+    }
+    @keyframes gridMove { 0% { transform: rotateX(60deg) translateY(0); } 100% { transform: rotateX(60deg) translateY(50px); } }
+    .hero-content { position: relative; z-index: 1; padding: 20px; max-width: 700px; }
+    .hero .badge {
+      display: inline-block; padding: 6px 20px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px; color: rgba(255,255,255,0.7); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px;
+    }
+    .hero h1 { font-size: clamp(32px, 7vw, 64px); color: white; line-height: 1.1; margin-bottom: 16px; }
+    .hero h1 span { background: linear-gradient(135deg, #f093fb, #f5576c, #ffd200); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: clamp(14px, 2.5vw, 18px); color: rgba(255,255,255,0.6); margin-bottom: 32px; line-height: 1.6; }
+    .btn-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { display: inline-block; padding: 14px 40px; background: linear-gradient(135deg, #f093fb, #f5576c); color: white; text-decoration: none; border-radius: 50px; font-weight: 600; transition: 0.3s; }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 40px rgba(245,87,108,0.4); }
+    .btn-secondary { display: inline-block; padding: 14px 40px; border: 1px solid rgba(255,255,255,0.3); color: white; text-decoration: none; border-radius: 50px; font-weight: 500; transition: 0.3s; }
+    .btn-secondary:hover { border-color: white; background: rgba(255,255,255,0.1); }
+
+    .stats-bar {
+      display: flex; justify-content: center; gap: 40px; padding: 24px; background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px); border-radius: 16px; margin-top: 40px;
+    }
+    .stat-item { text-align: center; }
+    .stat-item .num { font-size: 28px; font-weight: 800; color: white; }
+    .stat-item .label { font-size: 12px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; }
+
+    .section { padding: 80px 20px; max-width: 1200px; margin: 0 auto; }
+    .section-title { text-align: center; font-size: clamp(24px, 4vw, 36px); font-weight: 700; margin-bottom: 12px; }
+    .section-desc { text-align: center; color: #666; margin-bottom: 48px; font-size: 16px; line-height: 1.6; }
+
+    .course-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 20px; }
+    .course-card {
+      background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      transition: 0.4s; cursor: default;
+    }
+    .course-card:hover { transform: translateY(-8px); box-shadow: 0 16px 48px rgba(0,0,0,0.12); }
+    .course-card .thumb { height: 160px; overflow: hidden; }
+    .course-card .thumb img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+    .course-card:hover .thumb img { transform: scale(1.1); }
+    .course-card .body { padding: 20px; }
+    .course-card .body h3 { font-size: 18px; margin-bottom: 8px; }
+    .course-card .body p { color: #666; font-size: 14px; line-height: 1.5; margin-bottom: 12px; }
+    .course-card .meta { display: flex; justify-content: space-between; color: #999; font-size: 13px; }
+    .course-card .price { font-size: 20px; font-weight: 700; color: #f5576c; }
+
+    .testimonials {
+      background: #f8f9fa; padding: 80px 20px;
+    }
+    .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
+    .testimonial-card {
+      background: white; padding: 24px; border-radius: 12px; position: relative;
+    }
+    .testimonial-card .quote { font-size: 40px; color: #f093fb; opacity: 0.3; position: absolute; top: 12px; left: 16px; }
+    .testimonial-card p { font-style: italic; color: #555; line-height: 1.6; margin-bottom: 16px; }
+    .testimonial-card .author { font-weight: 600; color: #111; }
+    .testimonial-card .role { font-size: 13px; color: #999; }
+
+    .cta {
+      background: linear-gradient(135deg, #0f0c29, #240b36); color: white; text-align: center; padding: 80px 20px;
+    }
+    .cta h2 { font-size: clamp(24px, 4vw, 36px); margin-bottom: 12px; }
+    .cta p { color: rgba(255,255,255,0.6); margin-bottom: 30px; font-size: 16px; }
+    .cta-form { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; max-width: 500px; margin: 0 auto; }
+    .cta-form input { flex: 1; min-width: 200px; padding: 14px 20px; border: none; border-radius: 50px; outline: none; font-size: 15px; }
+    .cta-form button { padding: 14px 32px; background: linear-gradient(135deg, #f093fb, #f5576c); border: none; border-radius: 50px; color: white; font-weight: 600; font-size: 15px; cursor: pointer; transition: 0.3s; }
+    .cta-form button:hover { transform: scale(1.05); }
+
+    .footer { background: #0f0c29; color: rgba(255,255,255,0.4); text-align: center; padding: 24px; font-size: 14px; }
+
+    .animate-on-scroll { opacity: 0; transform: translateY(30px); transition: 0.6s ease; }
+    .animate-on-scroll.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="badge">🔥 Новый поток — скидка 40%</div>
+      <h1>Освой <span>IT-профессию</span> с нуля за 6 месяцев</h1>
+      <p>Практические курсы с гарантией трудоустройства. Наставники из Яндекса, Тинькофф и Сбера.</p>
+      <div class="btn-group">
+        <a href="#" class="btn-primary">Выбрать курс</a>
+        <a href="#" class="btn-secondary">Бесплатный урок</a>
+      </div>
+      <div class="stats-bar">
+        <div class="stat-item"><div class="num" id="studentsCount">0</div><div class="label">Студентов</div></div>
+        <div class="stat-item"><div class="num" id="coursesCount">0</div><div class="label">Курсов</div></div>
+        <div class="stat-item"><div class="num" id="gradsCount">0</div><div class="label">Трудоустроено</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section animate-on-scroll">
+    <h2 class="section-title">Популярные курсы</h2>
+    <p class="section-desc">Выбери направление и начни обучение уже сегодня</p>
+    <div class="course-grid">
+      <div class="course-card">
+        <div class="thumb"><img src="https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=400&h=250&fit=crop&auto=format" alt=""></div>
+        <div class="body">
+          <h3>Python-разработчик</h3>
+          <p>Автоматизация, боты, Django, FastAPI. Полный стек.</p>
+          <div class="meta"><span>6 месяцев</span><span class="price">59 000₽</span></div>
+        </div>
+      </div>
+      <div class="course-card">
+        <div class="thumb"><img src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=400&h=250&fit=crop&auto=format" alt=""></div>
+        <div class="body">
+          <h3>Веб-разработчик</h3>
+          <p>HTML, CSS, JS, React, Node.js. С нуля до senior.</p>
+          <div class="meta"><span>5 месяцев</span><span class="price">49 000₽</span></div>
+        </div>
+      </div>
+      <div class="course-card">
+        <div class="thumb"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop&auto=format" alt=""></div>
+        <div class="body">
+          <h3>Аналитик данных</h3>
+          <p>SQL, Python, Power BI, машинное обучение.</p>
+          <div class="meta"><span>4 месяца</span><span class="price">44 000₽</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonials">
+    <div class="section-title animate-on-scroll">Отзывы студентов</div>
+    <div class="testimonial-grid animate-on-scroll">
+      <div class="testimonial-card">
+        <div class="quote">"</div>
+        <p>Пришёл без опыта, через 5 месяцев получил оффер на 120 000₽. Курсы реально работают.</p>
+        <div class="author">Алексей К.</div>
+        <div class="role">Python-разработчик в Тинькофф</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="quote">"</div>
+        <p>Лучшие курсы по веб-разработке, которые я видел. Очень много практики, наставники отвечают быстро.</p>
+        <div class="author">Елена М.</div>
+        <div class="role">Frontend-разработчик</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="quote">"</div>
+        <p>Удобный формат — учусь вечером после работы. Через 6 месяцев повысили на senior с зп 250к.</p>
+        <div class="author">Дмитрий С.</div>
+        <div class="role">Team Lead</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <h2>Начните обучение бесплатно</h2>
+    <p>Оставьте почту — пришлём первый урок и план обучения</p>
+    <div class="cta-form">
+      <input type="email" placeholder="Ваш email">
+      <button>Получить</button>
+    </div>
+  </section>
+
+  <footer class="footer">© 2026 SkillPro. Все права защищены.</footer>
+
+  <script>
+    // Counters
+    function animateCounter(el, target) {
+      let current = 0; const step = Math.ceil(target / 60);
+      const interval = setInterval(() => {
+        current += step;
+        if (current >= target) { current = target; clearInterval(interval); }
+        el.textContent = current.toLocaleString() + '+';
+      }, 25);
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+    setTimeout(() => {
+      animateCounter(document.getElementById('studentsCount'), 12500);
+      animateCounter(document.getElementById('coursesCount'), 48);
+      animateCounter(document.getElementById('gradsCount'), 8700);
+    }, 500);
+  </script>
+</body>
+</html>

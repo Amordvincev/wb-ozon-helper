@@ -85,6 +85,37 @@ async function initDb() {
     )
   `);
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS avito_snapshots (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      data TEXT NOT NULL,
+      created_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS avito_listings (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      city TEXT,
+      date TEXT,
+      brand TEXT,
+      model TEXT,
+      title TEXT,
+      price INTEGER,
+      year INTEGER,
+      mileage INTEGER,
+      url TEXT,
+      created_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+
+  db.run(`
+    CREATE INDEX IF NOT EXISTS idx_avito_brand ON avito_listings(brand)
+  `);
+  db.run(`
+    CREATE INDEX IF NOT EXISTS idx_avito_date ON avito_listings(date)
+  `);
+
   try {
     db.run('ALTER TABLE products ADD COLUMN price INTEGER');
   } catch (e) {}

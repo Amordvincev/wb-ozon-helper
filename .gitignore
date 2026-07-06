@@ -1,3 +1,4 @@
 node_modules/
 backend/data.db
 backend/*.db
+avito-parser/node_modules/

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Foodie — доставка еды</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Nunito', sans-serif; background: #fafafa; color: #111; overflow-x: hidden; }
+
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)),
+        url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1400&h=900&fit=crop&auto=format');
+      background-size: cover; background-position: center;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .hero-float-ingredients { position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; }
+    .float-item {
+      position: absolute; font-size: 40px; animation: floatIngredient 8s ease-in-out infinite; opacity: 0.3;
+    }
+    .float-item:nth-child(1) { top: 15%; left: 5%; animation-delay: 0s; font-size: 50px; }
+    .float-item:nth-child(2) { top: 60%; left: 8%; animation-delay: 1s; font-size: 35px; }
+    .float-item:nth-child(3) { top: 25%; right: 10%; animation-delay: 2s; font-size: 45px; }
+    .float-item:nth-child(4) { top: 70%; right: 5%; animation-delay: 3s; }
+    .float-item:nth-child(5) { top: 40%; right: 25%; animation-delay: 4s; font-size: 30px; }
+    .float-item:nth-child(6) { top: 10%; left: 40%; animation-delay: 5s; font-size: 38px; }
+    @keyframes floatIngredient { 0%,100% { transform: translateY(0) rotate(0deg); } 33% { transform: translateY(-20px) rotate(5deg); } 66% { transform: translateY(10px) rotate(-5deg); } }
+    .hero-content { position: relative; z-index: 1; text-align: center; color: white; padding: 20px; }
+    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+    .hero h1 { font-size: clamp(42px, 8vw, 72px); font-weight: 900; margin-bottom: 8px; text-shadow: 0 4px 30px rgba(0,0,0,0.2); letter-spacing: -2px; }
+    .hero h1 span { display: inline-block; animation: letterPop 1s ease both; }
+    .hero h1 span:nth-child(1) { animation-delay: 0s; } .hero h1 span:nth-child(2) { animation-delay: 0.05s; }
+    .hero h1 span:nth-child(3) { animation-delay: 0.1s; } .hero h1 span:nth-child(4) { animation-delay: 0.15s; }
+    .hero h1 span:nth-child(5) { animation-delay: 0.2s; } .hero h1 span:nth-child(6) { animation-delay: 0.25s; }
+    @keyframes letterPop { 0% { opacity: 0; transform: translateY(30px) scale(0.5); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+    .hero p { font-size: clamp(16px, 2.5vw, 20px); opacity: 0.95; margin-bottom: 8px; }
+    .hero .promo {
+      display: inline-block; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
+      padding: 10px 28px; border-radius: 50px; font-size: 15px; margin-top: 24px;
+      border: 1px solid rgba(255,255,255,0.2); animation: pulseGlow 2s ease infinite;
+    }
+    @keyframes pulseGlow { 0%,100% { box-shadow: 0 0 0 rgba(255,255,255,0); } 50% { box-shadow: 0 0 30px rgba(255,255,255,0.15); } }
+    .hero .promo strong { font-weight: 800; }
+
+    .section { padding: 70px 20px; max-width: 1100px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 40px; }
+    .section-header .label { display: inline-block; padding: 4px 16px; background: rgba(238,90,36,0.08); color: #ee5a24; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+    .section-header h2 { font-size: 32px; font-weight: 800; }
+    .section-header p { color: #888; margin-top: 8px; }
+
+    .tag-filters { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 32px; }
+    .tag-filter {
+      padding: 8px 24px; border-radius: 50px; border: 1px solid #eee; background: white; cursor: pointer;
+      transition: 0.3s; font-size: 13px; font-weight: 500;
+    }
+    .tag-filter:hover, .tag-filter.active { border-color: #ee5a24; background: #ee5a24; color: white; transform: scale(1.05); }
+
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 20px; }
+    .food-card {
+      background: white; border-radius: 20px; overflow: hidden;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.04); transition: 0.4s; cursor: default;
+      position: relative;
+    }
+    .food-card::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, #ff6b6b, #ee5a24, #ffd200);
+      transform: scaleX(0); transition: 0.4s; transform-origin: left;
+    }
+    .food-card:hover::after { transform: scaleX(1); }
+    .food-card:hover { transform: translateY(-8px); box-shadow: 0 16px 48px rgba(238,90,36,0.15); }
+    .food-card .img {
+      height: 170px; overflow: hidden; position: relative;
+    }
+    .food-card .img::after {
+      content: '🔥'; position: absolute; top: 8px; right: 8px; background: white;
+      width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); opacity: 0; transition: 0.3s;
+    }
+    .food-card:hover .img::after { opacity: 1; }
+    .food-card .img img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+    .food-card:hover .img img { transform: scale(1.12); }
+    .food-card .badge {
+      position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); color: white;
+      padding: 2px 10px; border-radius: 20px; font-size: 11px; backdrop-filter: blur(4px);
+    }
+    .food-card .info { padding: 18px; }
+    .food-card .info h3 { font-size: 17px; margin-bottom: 4px; }
+    .food-card .info .desc { color: #999; font-size: 13px; margin-bottom: 12px; }
+    .food-card .info .bottom { display: flex; justify-content: space-between; align-items: center; }
+    .food-card .info .price { font-size: 20px; font-weight: 800; background: linear-gradient(135deg, #ff6b6b, #ee5a24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .food-card .info .add-btn {
+      width: 36px; height: 36px; border-radius: 50%; border: none; background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      color: white; font-size: 18px; cursor: pointer; transition: 0.3s; position: relative; overflow: hidden;
+    }
+    .food-card .info .add-btn:hover { transform: scale(1.15); box-shadow: 0 4px 20px rgba(238,90,36,0.4); }
+    .food-card .info .add-btn:active { transform: scale(0.9); }
+    .ripple { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.4); transform: scale(0); animation: rippleAnim 0.6s ease; }
+    @keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
+
+    .how-section { background: white; padding: 80px 20px; position: relative; overflow: hidden; }
+    .how-section::before {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: conic-gradient(from 0deg, transparent, rgba(238,90,36,0.03), transparent, rgba(238,90,36,0.03), transparent);
+      animation: rotateBg 20s linear infinite;
+    }
+    @keyframes rotateBg { to { transform: rotate(360deg); } }
+    .how-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; position: relative; z-index: 1; }
+    .how-step { text-align: center; padding: 20px; position: relative; }
+    .how-step:not(:last-child)::after {
+      content: '→'; position: absolute; right: -16px; top: 30px; font-size: 24px; color: #ee5a24; opacity: 0.3;
+    }
+    .how-step .num {
+      width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      color: white; display: flex; align-items: center; justify-content: center; font-weight: 900;
+      font-size: 22px; margin: 0 auto 16px; position: relative;
+    }
+    .how-step .num .pulse {
+      position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px;
+      border-radius: 50%; border: 2px solid rgba(238,90,36,0.2); animation: pulseRing 2s ease infinite;
+    }
+    @keyframes pulseRing { 0%,100% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.3); opacity: 0; } }
+    .how-step h3 { font-size: 18px; margin-bottom: 8px; }
+    .how-step p { color: #888; font-size: 14px; line-height: 1.6; }
+
+    .promo-banner {
+      background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; border-radius: 24px;
+      padding: 48px; text-align: center; margin: 40px auto; max-width: 800px;
+      position: relative; overflow: hidden;
+    }
+    .promo-banner::before {
+      content: ''; position: absolute; top: -20px; right: -20px; width: 120px; height: 120px;
+      background: rgba(255,107,107,0.1); border-radius: 50%;
+    }
+    .promo-banner::after {
+      content: ''; position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px;
+      background: rgba(238,90,36,0.08); border-radius: 50%;
+    }
+    .promo-banner h2 { font-size: 32px; margin-bottom: 8px; position: relative; z-index: 1; }
+    .promo-banner .timer { font-size: 48px; font-weight: 900; letter-spacing: 6px; margin: 16px 0; position: relative; z-index: 1; font-variant-numeric: tabular-nums; }
+    .promo-banner .timer span { display: inline-block; }
+    .promo-banner .code { display: inline-block; background: rgba(255,255,255,0.1); padding: 8px 24px; border-radius: 8px; font-size: 18px; letter-spacing: 4px; font-weight: 700; margin-top: 8px; position: relative; z-index: 1; }
+
+    .footer {
+      background: linear-gradient(180deg, #1a1a2e, #0f0f1a);
+      color: rgba(255,255,255,0.5); text-align: center; padding: 50px 20px;
+    }
+    .footer .phone { font-size: 28px; color: white; font-weight: 800; margin: 8px 0; background: linear-gradient(135deg, #ff6b6b, #ee5a24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .footer .info-text { font-size: 14px; line-height: 2; }
+
+    .cart-fab {
+      position: fixed; bottom: 28px; right: 28px; width: 60px; height: 60px; border-radius: 50%;
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; border: none; font-size: 26px;
+      cursor: pointer; box-shadow: 0 6px 30px rgba(238,90,36,0.4); transition: 0.3s; z-index: 100;
+    }
+    .cart-fab:hover { transform: scale(1.1) rotate(5deg); }
+    .cart-fab:active { transform: scale(0.9); }
+    .cart-fab .count {
+      position: absolute; top: -4px; right: -4px; background: #111; color: white;
+      width: 24px; height: 24px; border-radius: 50%; font-size: 12px; display: flex;
+      align-items: center; justify-content: center; font-weight: 700;
+    }
+    .cart-fab .total-badge {
+      position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+      background: white; color: #ee5a24; padding: 2px 10px; border-radius: 10px;
+      font-size: 11px; font-weight: 700; white-space: nowrap; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .cart-fab .total-badge.hidden { display: none; }
+
+    /* Toast notification */
+    .toast {
+      position: fixed; bottom: 100px; right: 28px; background: #111; color: white;
+      padding: 14px 24px; border-radius: 12px; font-size: 14px; box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      transform: translateX(120%); transition: 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); z-index: 101;
+    }
+    .toast.show { transform: translateX(0); }
+    .toast .emoji { margin-right: 8px; }
+
+    /* Reveal animations */
+    .reveal { opacity: 0; transform: translateY(30px); transition: 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 700px) {
+      .how-grid { grid-template-columns: 1fr; }
+      .how-step:not(:last-child)::after { content: '↓'; right: auto; bottom: -16px; top: auto; left: 50%; transform: translateX(-50%); }
+      .promo-banner { padding: 32px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="hero-float-ingredients">
+      <span class="float-item">🍕</span>
+      <span class="float-item">🍔</span>
+      <span class="float-item">🌮</span>
+      <span class="float-item">🥗</span>
+      <span class="float-item">🧋</span>
+      <span class="float-item">🍰</span>
+    </div>
+    <div class="hero-content">
+      <h1>
+        <span>F</span><span>o</span><span>o</span><span>d</span><span>i</span><span>e</span>
+      </h1>
+      <p>Бесплатная доставка за 35 мин · от 799₽</p>
+      <div class="promo">Первый заказ — <strong>−20%</strong> по коду <strong>FOODIE20</strong></div>
+    </div>
+  </section>
+
+  <section class="section" id="menu">
+    <div class="section-header reveal">
+      <div class="label">Меню</div>
+      <h2>Что сегодня?</h2>
+      <p>Выбери и добавь в корзину</p>
+    </div>
+    <div class="tag-filters reveal">
+      <span class="tag-filter active">Всё</span>
+      <span class="tag-filter">Пицца</span>
+      <span class="tag-filter">Бургеры</span>
+      <span class="tag-filter">Роллы</span>
+      <span class="tag-filter">Десерты</span>
+    </div>
+    <div class="menu-grid">
+      <div class="food-card reveal"><div class="img"><span class="badge">Хит</span><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=300&fit=crop&auto=format" alt=""></div><div class="info"><h3>Пепперони</h3><div class="desc">Томатный соус, сыр, пепперони</div><div class="bottom"><span class="price">499₽</span><button class="add-btn" data-name="Пепперони" data-price="499">+</button></div></div></div>
+      <div class="food-card reveal"><div class="img"><span class="badge">🔥</span><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop&auto=format" alt=""></div><div class="info"><h3>Чизбургер</h3><div class="desc">Двойная котлета, сыр, соус</div><div class="bottom"><span class="price">399₽</span><button class="add-btn" data-name="Чизбургер" data-price="399">+</button></div></div></div>
+      <div class="food-card reveal"><div class="img"><span class="badge">Новинка</span><img src="https://images.unsplash.com/photo-1553621042-f6e147245754?w=400&h=300&fit=crop&auto=format" alt=""></div><div class="info"><h3>Филадельфия</h3><div class="desc">Лосось, сливочный сыр, огурец</div><div class="bottom"><span class="price">599₽</span><button class="add-btn" data-name="Филадельфия" data-price="599">+</button></div></div></div>
+      <div class="food-card reveal"><div class="img"><span class="badge">Хит</span><img src="https://images.unsplash.com/photo-1524351199678-941a58a3df50?w=400&h=300&fit=crop&auto=format" alt=""></div><div class="info"><h3>Чизкейк</h3><div class="desc">Нью-Йорк с ягодным соусом</div><div class="bottom"><span class="price">299₽</span><button class="add-btn" data-name="Чизкейк" data-price="299">+</button></div></div></div>
+      <div class="food-card reveal"><div class="img"><img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop&auto=format" alt=""></div><div class="info"><h3>Лапша Wok</h3><div class="desc">С курицей и овощами</div><div class="bottom"><span class="price">449₽</span><button class="add-btn" data-name="Лапша Wok" data-price="449">+</button></div></div></div>
+      <div class="food-card reveal"><div class="img"><img src="https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&h=300&fit=crop&auto=format" alt=""></div><div class="info"><h3>Милкшейк</h3><div class="desc">Клубника, банан, шоколад</div><div class="bottom"><span class="price">249₽</span><button class="add-btn" data-name="Милкшейк" data-price="249">+</button></div></div></div>
+    </div>
+  </section>
+
+  <section class="how-section">
+    <div class="section" style="padding:0;position:relative;z-index:1;">
+      <div class="section-header reveal">
+        <div class="label">Просто</div>
+        <h2>Как заказать</h2>
+      </div>
+      <div class="how-grid reveal">
+        <div class="how-step"><div class="num">1<div class="pulse"></div></div><h3>Выбери блюда</h3><p>Листай меню, добавляй в корзину всё, что хочешь</p></div>
+        <div class="how-step"><div class="num">2<div class="pulse"></div></div><h3>Оформи заказ</h3><p>Адрес и оплата за 2 минуты — без регистрации</p></div>
+        <div class="how-step"><div class="num">3<div class="pulse"></div></div><h3>Еда у тебя</h3><p>Курьер приедет через 35 минут или самовывоз −15%</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="promo">
+    <div class="promo-banner reveal">
+      <h2>Скидка 30%</h2>
+      <p>На первый заказ от 1000₽</p>
+      <div class="timer" id="timer"><span>05</span>:<span>00</span></div>
+      <div class="code">FAST30</div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>Доставляем ежедневно с 10:00 до 23:00</p>
+    <div class="phone">+7 (999) 123-45-67</div>
+    <p class="info-text">г. Москва · бесплатно в пределах МКАД</p>
+  </footer>
+
+  <button class="cart-fab" id="cartBtn">🛒<span class="count" id="cartCount">0</span><span class="total-badge hidden" id="cartTotal">0₽</span></button>
+  <div class="toast" id="toast"><span class="emoji">✅</span> Добавлено!</div>
+
+  <script>
+    // Cart with total
+    let cart = { count: 0, total: 0 };
+    const toast = document.getElementById('toast');
+
+    document.querySelectorAll('.add-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const name = btn.dataset.name;
+        const price = parseInt(btn.dataset.price);
+        cart.count++;
+        cart.total += price;
+        document.getElementById('cartCount').textContent = cart.count;
+        const totalBadge = document.getElementById('cartTotal');
+        totalBadge.textContent = cart.total + '₽';
+        totalBadge.classList.remove('hidden');
+
+        // Ripple
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        ripple.style.left = '50%';
+        ripple.style.top = '50%';
+        ripple.style.width = '60px';
+        ripple.style.height = '60px';
+        ripple.style.marginLeft = '-30px';
+        ripple.style.marginTop = '-30px';
+        btn.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+
+        // Button bounce
+        btn.style.transform = 'scale(1.3)';
+        setTimeout(() => btn.style.transform = '', 300);
+
+        // Toast
+        toast.innerHTML = `<span class="emoji">🍽️</span> ${name} — ${price}₽`;
+        toast.classList.remove('show');
+        void toast.offsetWidth;
+        toast.classList.add('show');
+        clearTimeout(toast._timeout);
+        toast._timeout = setTimeout(() => toast.classList.remove('show'), 2000);
+      });
+    });
+
+    // Cart click
+    document.getElementById('cartBtn').addEventListener('click', () => {
+      if (cart.count === 0) { alert('🛒 Корзина пуста!'); return; }
+      alert('🛒 В корзине: ' + cart.count + ' товаров на ' + cart.total + '₽\nОформление — скоро!');
+    });
+
+    // Timer
+    let minutes = 5, seconds = 0;
+    setInterval(() => {
+      seconds--;
+      if (seconds < 0) { minutes--; seconds = 59; }
+      if (minutes < 0) { minutes = 5; seconds = 0; }
+      document.getElementById('timer').innerHTML =
+        '<span>' + String(minutes).padStart(2,'0') + '</span>:<span>' + String(seconds).padStart(2,'0') + '</span>';
+    }, 1000);
+
+    // Filters
+    document.querySelectorAll('.tag-filter').forEach(tag => {
+      tag.addEventListener('click', () => {
+        document.querySelectorAll('.tag-filter').forEach(t => t.classList.remove('active'));
+        tag.classList.add('active');
+      });
+    });
+
+    // Scroll reveals
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

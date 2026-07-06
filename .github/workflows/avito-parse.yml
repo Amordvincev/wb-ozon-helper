@@ -1,0 +1,41 @@
+name: Avito Parser
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  parse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm install
+        working-directory: avito-parser
+
+      - name: Run parser
+        run: node index.js
+        env:
+          BACKEND_URL: ${{ secrets.BACKEND_URL || 'https://wb-ozon-helper.onrender.com' }}
+        working-directory: avito-parser
+
+      - name: Commit results
+        run: |
+          git config user.name "avito-bot"
+          git config user.email "bot@avito-parser"
+          git add data/avito-history.json
+          git diff --quiet && git diff --staged --quiet || git commit -m "авто: обновление Avito $(date +%Y-%m-%d)"
+          git push
+
+  keep-awake:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    steps:
+      - name: Ping Render
+        run: curl -s '${{ secrets.BACKEND_URL || 'https://wb-ozon-helper.onrender.com' }}/api/health' > /dev/null || true

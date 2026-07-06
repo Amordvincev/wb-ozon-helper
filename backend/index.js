@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { initDb, getDb, saveDb } = require('./db');
+const { initBot, sendDailyDigest } = require('./telegram-bot');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -406,12 +407,115 @@ app.get('/api/pro/success', (req, res) => {
   `);
 });
 
+// Avito parser endpoints
+app.post('/api/avito/upload', (req, res) => {
+  try {
+    const { city, listings, stats } = req.body;
+    if (!listings || !stats) return res.status(400).json({ error: 'listings and stats required' });
+
+    const date = new Date().toISOString().split('T')[0];
+    const db = getDb();
+
+    for (const item of listings) {
+      db.run(
+        `INSERT INTO avito_listings (city, date, brand, model, title, price, year, mileage, url)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [city || 'Волгоград', date, item.brand || '', item.model || '', item.title || '', item.price, item.year, item.mileage, item.url || '']
+      );
+    }
+
+    db.run(`INSERT INTO avito_snapshots (data) VALUES (?)`, [JSON.stringify({ city, stats })]);
+    saveDb();
+    res.json({ status: 'ok', count: listings.length });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/api/avito/notify', (req, res) => {
+  try {
+    const { stats } = req.body;
+    sendDailyDigest(stats);
+    res.json({ status: 'ok' });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.get('/api/avito', (req, res) => {
+  try {
+    const db = getDb();
+    const { brand, model, days } = req.query;
+    const period = days || 7;
+
+    if (brand && model) {
+      const rows = db.exec(
+        `SELECT date, AVG(price) as avg, MIN(price) as min, MAX(price) as max, COUNT(*) as count
+         FROM avito_listings WHERE brand = ? AND model = ?
+         AND date >= date('now', '-' || ? || ' days')
+         GROUP BY date ORDER BY date ASC`,
+        [brand, model, period]
+      );
+      const stats = rows.length > 0 ? rows[0].values.map(v => ({
+        date: v[0], avg: v[1], min: v[2], max: v[3], count: v[4]
+      })) : [];
+
+      const latest = db.exec(
+        `SELECT AVG(price) as avg, MIN(price) as min, MAX(price) as max, COUNT(*) as count, AVG(year) as avgYear, AVG(mileage) as avgMileage
+         FROM avito_listings WHERE brand = ? AND model = ?
+         AND date = (SELECT MAX(date) FROM avito_listings WHERE brand = ? AND model = ?)`,
+        [brand, model, brand, model]
+      );
+
+      return res.json({ stats, latest: latest[0]?.values[0] ? {
+        avg: latest[0].values[0][0], min: latest[0].values[0][1],
+        max: latest[0].values[0][2], count: latest[0].values[0][3],
+        avgYear: latest[0].values[0][4], avgMileage: latest[0].values[0][5],
+      } : null });
+    }
+
+    if (brand) {
+      const rows = db.exec(
+        `SELECT model, COUNT(*) as count, AVG(price) as avg
+         FROM avito_listings WHERE brand = ?
+         AND date >= date('now', '-' || ? || ' days')
+         GROUP BY model ORDER BY count DESC`,
+        [brand, period]
+      );
+      return res.json({ models: rows[0]?.values.map(v => ({ model: v[0], count: v[1], avg: v[2] })) || [] });
+    }
+
+    // Top brands
+    const rows = db.exec(
+      `SELECT brand, COUNT(*) as count, AVG(price) as avg
+       FROM avito_listings WHERE brand != ''
+       AND date >= date('now', '-' || ? || ' days')
+       GROUP BY brand ORDER BY count DESC LIMIT 20`,
+      [period]
+    );
+
+    const total = db.exec(
+      `SELECT COUNT(*) as count, AVG(price) as avg
+       FROM avito_listings WHERE date >= date('now', '-' || ? || ' days')`,
+      [period]
+    );
+
+    res.json({
+      brands: rows[0]?.values.map(v => ({ brand: v[0], count: v[1], avg: v[2] })) || [],
+      total: total[0]?.values[0] || [0, null],
+    });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
 async function start() {
   await initDb();
+  try { initBot(); } catch (e) { console.error('Bot init failed:', e.message); }
   app.listen(PORT, () => {
     console.log(`WB-Ozon Helper API running on http://localhost:${PORT}`);
   });
