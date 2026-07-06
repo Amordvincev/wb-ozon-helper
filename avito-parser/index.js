@@ -2,6 +2,7 @@ import * as cheerio from 'cheerio';
 import { writeFileSync, existsSync, readFileSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, '..', 'data');
@@ -9,6 +10,8 @@ const HISTORY_FILE = join(DATA_DIR, 'avito-history.json');
 const BACKEND_URL = process.env.BACKEND_URL || 'https://wb-ozon-helper.onrender.com';
 
 const CITY = { name: 'Волгоград', slug: 'volgograd' };
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 const KNOWN_BRANDS = [
   'Lada', 'ВАЗ', 'Vaz', 'Toyota', 'Kia', 'Hyundai', 'Renault', 'Nissan',
@@ -45,6 +48,7 @@ const NEVER_BRAND = new Set([
   '6', '7', '8', '9', '0',
   'один', 'два', 'три', 'четыре', 'пять',
   'клиентам', '089', '088', '087', '086', '085',
+  'доп', 'доп.', 'trade-in', 'tradein', 'трейд-ин', 'трейдин',
 ]);
 
 function parseBrand(title) {
@@ -74,7 +78,7 @@ function parseBrand(title) {
     }
   }
 
-  // Last resort
+  // Last resort (filtered)
   for (const word of words) {
     const clean = word.toLowerCase().replace(/[^a-zа-яё0-9]/g, '');
     if (NEVER_BRAND.has(clean)) continue;
@@ -82,7 +86,16 @@ function parseBrand(title) {
     if (clean.length >= 2) return word;
   }
 
-  return words[0] || '—';
+  return '—';
+}
+
+function isGarbageBrand(brand) {
+  if (!brand || brand === '—') return true;
+  const clean = brand.toLowerCase().replace(/[^a-zа-яё0-9]/g, '');
+  if (NEVER_BRAND.has(clean)) return true;
+  if (SKIP_WORDS.has(clean)) return true;
+  if (clean.length < 2) return true;
+  return false;
 }
 
 function parseModel(title, brand) {
@@ -96,15 +109,20 @@ function parseModel(title, brand) {
 }
 
 async function fetchPage(url) {
-  const res = await fetch(url, {
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-      'Accept-Language': 'ru-RU,ru;q=0.9,en;q=0.8',
-    },
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
-  return await res.text();
+  const tmpFile = join(DATA_DIR, '_avito_page.html');
+  try {
+    execSync(
+      `curl.exe -s -L -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" -H "Accept: text/html" -H "Accept-Language: ru-RU,ru" --connect-timeout 10 "${url}" -o "${tmpFile}"`,
+      { timeout: 60000, encoding: 'utf-8' }
+    );
+    const html = readFileSync(tmpFile, 'utf-8');
+    if (!html || html.length < 1000) throw new Error('Short response');
+    return html;
+  } catch (e) {
+    throw new Error(`HTTP error: ${e.message}`);
+  } finally {
+    try { writeFileSync(tmpFile, ''); } catch {}
+  }
 }
 
 function extractNumber(text) {
@@ -222,6 +240,8 @@ async function parseAllPages() {
       }
       allListings.push(...listings);
       console.log(`  → ${listings.length} объявлений (всего: ${allListings.length})`);
+      // Delay between pages to avoid rate limiting
+      if (page < maxPages) await sleep(2000 + Math.random() * 2000);
     } catch (err) {
       console.log(`  → ошибка: ${err.message}`);
       break;
@@ -234,7 +254,9 @@ async function parseAllPages() {
 function computeStats(listings) {
   if (listings.length === 0) return null;
 
-  const valid = listings.filter(l => l.price > 50000 && l.price < 50000000);
+  const valid = listings.filter(
+    l => l.price > 50000 && l.price < 50000000 && l.brand && !isGarbageBrand(l.brand)
+  );
   const prices = valid.map(l => l.price).sort((a, b) => a - b);
   const withYear = valid.filter(l => l.year && l.year >= 1990 && l.year <= 2026);
   const withMileage = valid.filter(l => l.mileage && l.mileage > 0 && l.mileage < 500000);
@@ -263,7 +285,7 @@ function computeStats(listings) {
   }
 
   const brands = Object.entries(brandStats)
-    .filter(([_, v]) => v.count >= 2)
+    .filter(([name, v]) => v.count >= 2 && !isGarbageBrand(name))
     .map(([name, data]) => ({ brand: name, count: data.count, avgPrice: avg(data.prices) }))
     .sort((a, b) => b.count - a.count)
     .slice(0, 20);
