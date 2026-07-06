@@ -1,4 +1,5 @@
 (function () {
+  console.log('[WB-Ozon Helper] Ozon loaded');
   function extractPrice() {
     const priceSelectors = [
       '[data-widget="webPrice"] span:last-child',

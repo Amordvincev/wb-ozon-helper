@@ -346,6 +346,17 @@ app.post('/api/yoomoney/callback', (req, res) => {
   }
 });
 
+app.get('/api/pro/test-pay', (req, res) => {
+  const db = getDb();
+  const key = generateKey();
+  db.run(
+    `INSERT INTO subscriptions (key, expires_at) VALUES (?, datetime('now', '+30 days'))`,
+    [key]
+  );
+  saveDb();
+  res.send(`<h2>Тестовый платёж</h2><p>Сгенерирован ключ: <b>${key}</b></p><p>Введите его в расширении.</p>`);
+});
+
 app.get('/api/pro/pay', (req, res) => {
   const receiver = YOOMONEY_WALLET || 'YOUR_WALLET_NUMBER';
   const label = cryptoRandom();
