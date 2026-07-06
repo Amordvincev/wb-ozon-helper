@@ -256,3 +256,146 @@ header h1 {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.pro-btn {
+  margin-left: auto;
+  padding: 4px 12px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f39c12, #e74c3c);
+  color: white;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: transform 0.15s;
+}
+
+.pro-btn:hover {
+  transform: scale(1.05);
+}
+
+.pro-btn.pro-active {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+#pro-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+#pro-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  width: 360px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+#pro-modal h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #1a1a2e;
+}
+
+.pro-desc {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+#pro-status {
+  padding: 8px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+#pro-status.pro-free {
+  background: #fef3cd;
+  color: #856404;
+}
+
+#pro-status.pro-active-status {
+  background: #d4edda;
+  color: #155724;
+}
+
+#pro-usage {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+#pro-key-block {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+#pro-key-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
+}
+
+#pro-key-input:focus {
+  border-color: #6c5ce7;
+}
+
+#pro-activate-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #6c5ce7;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#pro-activate-btn:hover {
+  background: #5a4bd1;
+}
+
+.pro-buy-btn {
+  display: block;
+  padding: 10px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f39c12, #e74c3c);
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 12px;
+  transition: transform 0.15s;
+}
+
+.pro-buy-btn:hover {
+  transform: scale(1.02);
+}
+
+#pro-close-btn {
+  padding: 8px 24px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  color: #666;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+#pro-close-btn:hover {
+  background: #f5f5f5;
+}

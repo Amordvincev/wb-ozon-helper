@@ -11,6 +11,7 @@
     <header>
       <img src="../icons/icon48.png" alt="logo" class="logo">
       <h1>WB-Ozon Помощник</h1>
+      <button id="pro-btn" class="pro-btn" title="PRO подписка">PRO</button>
     </header>
 
     <div id="no-product" class="hidden">
@@ -88,6 +89,27 @@
         <h3>Анализ продавца</h3>
         <div id="seller-products-count">Товаров: —</div>
         <div id="seller-avg-rating">Средний рейтинг: —</div>
+      </div>
+    </div>
+
+    <div id="pro-overlay" class="hidden">
+      <div id="pro-modal">
+        <h3>PRO подписка</h3>
+        <p class="pro-desc">График за 90 дней, безлимитные просмотры, экспорт CSV</p>
+        <div id="pro-status">
+          <span id="pro-status-text">Проверка...</span>
+        </div>
+        <div id="pro-usage">
+          <span>Использовано сегодня: <b id="pro-today">0</b>/10</span>
+        </div>
+        <div id="pro-key-block">
+          <input type="text" id="pro-key-input" placeholder="Введите PRO-ключ">
+          <button id="pro-activate-btn">Активировать</button>
+        </div>
+        <div id="pro-buy">
+          <a href="https://wb-ozon-helper.onrender.com/api/pro/pay" target="_blank" class="pro-buy-btn">Купить PRO — 500₽/мес</a>
+        </div>
+        <button id="pro-close-btn">Закрыть</button>
       </div>
     </div>
 

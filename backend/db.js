@@ -56,7 +56,35 @@ async function initDb() {
     ON products(marketplace, sku)
   `);
 
-  // Add price column if missing (migration)
+  db.run(`
+    CREATE TABLE IF NOT EXISTS clients (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      client_id TEXT UNIQUE NOT NULL,
+      created_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS subscriptions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      key TEXT UNIQUE NOT NULL,
+      client_id TEXT,
+      active INTEGER DEFAULT 1,
+      expires_at TEXT,
+      created_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS usage_log (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      client_id TEXT NOT NULL,
+      date TEXT NOT NULL DEFAULT (date('now')),
+      count INTEGER DEFAULT 0,
+      UNIQUE(client_id, date)
+    )
+  `);
+
   try {
     db.run('ALTER TABLE products ADD COLUMN price INTEGER');
   } catch (e) {}

@@ -1,31 +1,32 @@
 (function () {
-  function waitForElement(selector, timeout = 5000) {
-    return new Promise((resolve) => {
-      const start = Date.now();
-      const check = () => {
-        const el = document.querySelector(selector);
-        if (el) return resolve(el);
-        if (Date.now() - start > timeout) return resolve(null);
-        setTimeout(check, 200);
-      };
-      check();
-    });
-  }
-
   function extractPrice() {
-    const selectors = [
+    const priceSelectors = [
       '[data-widget="webPrice"] span:last-child',
       '[class*="price"] [class*="main"]',
       '.tsBody500Large',
       '.c3011',
       '[class*="ControlPriceContainer"] span:last-child',
+      '[data-widget="webProductMainWidget"]',
     ];
-    for (const sel of selectors) {
+    for (const sel of priceSelectors) {
       const el = document.querySelector(sel);
       if (el) {
         const raw = el.textContent.replace(/\s/g, '').replace(/[^\d]/g, '');
         const val = parseInt(raw, 10);
         if (!isNaN(val) && val > 0) return val;
+      }
+    }
+
+    const allElements = document.querySelectorAll('span, div, ins, b, strong, button');
+    for (const el of allElements) {
+      const text = el.textContent.trim();
+      if (text.length > 3 && text.length < 20) {
+        const match = text.match(/(\d{1,3}(?:\s?\d{3})*)\s*[₽р]/i);
+        if (match) {
+          const raw = match[1].replace(/\s/g, '');
+          const val = parseInt(raw, 10);
+          if (!isNaN(val) && val > 0) return val;
+        }
       }
     }
     return null;
@@ -49,7 +50,7 @@
   }
 
   function extractSku() {
-    const urlMatch = window.location.pathname.match(/-(\d{6,})\//);
+    const urlMatch = window.location.pathname.match(/-(\d{6,})\/?/);
     if (urlMatch) return urlMatch[1];
 
     const el =
@@ -65,41 +66,50 @@
   }
 
   function extractName() {
-    const el =
-      document.querySelector('h1') ||
-      document.querySelector('[class*="product"][class*="title"]') ||
-      document.querySelector('[data-widget="webProductHeading"] h1');
+    const el = document.querySelector('h1') || document.querySelector('[data-widget="webProductHeading"] h1');
     return el ? el.textContent.trim() : null;
   }
 
   function extractSeller() {
-    const el =
-      document.querySelector('[class*="seller"]') ||
-      document.querySelector('[class*="supplier"]') ||
-      document.querySelector('[data-widget="webSellerInfo"]');
-    return el ? el.textContent.trim() : null;
+    const selectors = [
+      '[data-widget="webSellerInfo"]',
+      '[class*="seller"]',
+      '[class*="supplier"]',
+    ];
+    for (const sel of selectors) {
+      const el = document.querySelector(sel);
+      if (el) {
+        const text = el.textContent.trim();
+        if (text && text !== 'Продавец') return text;
+      }
+    }
+    return null;
   }
 
   function extractRating() {
-    const el =
-      document.querySelector('[class*="rating"] [class*="value"]') ||
-      document.querySelector('[class*="star"]') ||
-      document.querySelector('[class*="Rating"]');
-    if (el) {
-      const val = parseFloat(el.textContent.trim().replace(',', '.'));
-      return isNaN(val) ? null : val;
+    const selectors = [
+      '[class*="rating"] [class*="value"]',
+      '[class*="Rating"]',
+      '[class*="star"]',
+    ];
+    for (const sel of selectors) {
+      const el = document.querySelector(sel);
+      if (el) {
+        const val = parseFloat(el.textContent.trim().replace(',', '.'));
+        if (!isNaN(val)) return val;
+      }
     }
     return null;
   }
 
   function extractCategory() {
-    const el = document.querySelector('[class*="breadcrumb"]');
-    if (el) {
-      const items = el.querySelectorAll('li, span, a, [class*="item"]');
-      return Array.from(items)
-        .map((i) => i.textContent.trim())
-        .filter(Boolean)
-        .join(' / ');
+    const selectors = ['[class*="breadcrumb"]', '[class*="crumb"]'];
+    for (const sel of selectors) {
+      const el = document.querySelector(sel);
+      if (el) {
+        const text = el.textContent.replace(/\s+/g, ' ').trim();
+        if (text) return text;
+      }
     }
     return null;
   }
@@ -121,16 +131,23 @@
       url: window.location.href,
     };
 
-    chrome.runtime.sendMessage({ action: 'savePrice', data }, () => {
-      if (chrome.runtime.lastError) {
-        console.warn('[WB-Ozon Helper] Send failed:', chrome.runtime.lastError.message);
+    const API_URL = 'https://wb-ozon-helper.onrender.com';
+
+    try {
+      const res = await fetch(`${API_URL}/api/price`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (res.ok) {
+        console.log('[WB-Ozon Helper] Data sent:', sku);
       }
-    });
+    } catch (e) {
+      console.warn('[WB-Ozon Helper] Send failed:', e.message);
+    }
 
     chrome.storage.local.set({ [`last_${sku}`]: data });
   }
 
-  waitForElement('h1, [class*="price"], [data-widget="webPrice"]').then(() => {
-    setTimeout(sendData, 1500);
-  });
+  setTimeout(sendData, 3000);
 })();

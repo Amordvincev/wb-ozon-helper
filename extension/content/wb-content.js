@@ -172,13 +172,35 @@
       url: window.location.href,
     };
 
-    chrome.runtime.sendMessage({ action: 'savePrice', data }, () => {
-      if (chrome.runtime.lastError) {
-        console.warn('[WB-Ozon Helper] Send failed:', chrome.runtime.lastError.message);
+    const API_URL = 'https://wb-ozon-helper.onrender.com';
+
+    try {
+      const res = await fetch(`${API_URL}/api/price`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (res.ok) {
+        console.log('[WB-Ozon Helper] Data sent:', sku);
       }
-    });
+    } catch (e) {
+      console.warn('[WB-Ozon Helper] Send failed:', e.message);
+    }
 
     chrome.storage.local.set({ [`last_${sku}`]: data });
+  }
+
+  function waitForData() {
+    return new Promise((resolve) => {
+      const start = Date.now();
+      const check = () => {
+        const seller = document.querySelector('[class*="sellerAndBrandItemName"]');
+        const price = document.querySelector('[class*="price"]');
+        if (seller || price || Date.now() - start > 8000) resolve();
+        else setTimeout(check, 300);
+      };
+      check();
+    });
   }
 
   setTimeout(sendData, 4000);

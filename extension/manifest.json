@@ -11,8 +11,7 @@
   "host_permissions": [
     "https://www.wildberries.ru/*",
     "https://www.ozon.ru/*",
-    "https://wb-ozon-helper-api.onrender.com/*",
-    "http://localhost:3000/*"
+    "https://wb-ozon-helper.onrender.com/*"
   ],
   "action": {
     "default_popup": "popup/popup.html",

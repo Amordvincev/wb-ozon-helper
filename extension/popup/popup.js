@@ -230,11 +230,118 @@ async function init() {
   }
 }
 
+let isPro = false;
+let proData = null;
+
+function proStatus() {
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ action: 'proStatus' }, (r) => {
+      resolve(r?.success ? r.data : null);
+    });
+  });
+}
+
+function proActivate(key) {
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ action: 'proActivate', key }, (r) => {
+      resolve(r?.success ? r.data : null);
+    });
+  });
+}
+
+function proUse() {
+  chrome.runtime.sendMessage({ action: 'proUse' });
+}
+
+function updateProUI() {
+  const btn = $('#pro-btn');
+  if (proData?.is_pro) {
+    btn.classList.add('pro-active');
+    btn.textContent = 'PRO';
+  } else {
+    btn.classList.remove('pro-active');
+    btn.textContent = 'PRO';
+  }
+}
+
+function limitPeriods() {
+  document.querySelectorAll('.period-btn').forEach((btn) => {
+    const days = parseInt(btn.dataset.days, 10);
+    if (!proData?.is_pro && days > 7) {
+      btn.disabled = true;
+      btn.style.opacity = '0.4';
+      btn.title = 'Только для PRO';
+    } else {
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.title = '';
+    }
+  });
+}
+
+$('#pro-btn').addEventListener('click', () => {
+  show('#pro-overlay');
+  renderProModal();
+});
+
+$('#pro-close-btn').addEventListener('click', () => {
+  hide('#pro-overlay');
+});
+
+$('#pro-activate-btn').addEventListener('click', async () => {
+  const key = $('#pro-key-input').value.trim();
+  if (!key) return;
+  $('#pro-activate-btn').textContent = 'Активация...';
+  $('#pro-activate-btn').disabled = true;
+  const result = await proActivate(key);
+  $('#pro-activate-btn').textContent = 'Активировать';
+  $('#pro-activate-btn').disabled = false;
+  if (result?.success) {
+    await checkProStatus();
+    renderProModal();
+    limitPeriods();
+  } else {
+    alert(result?.error || 'Ошибка активации');
+  }
+});
+
+async function renderProModal() {
+  await checkProStatus();
+  const statusEl = $('#pro-status');
+  const statusText = $('#pro-status-text');
+  const usageEl = $('#pro-usage');
+  const todayEl = $('#pro-today');
+
+  if (proData?.is_pro) {
+    statusEl.className = 'pro-active-status';
+    statusText.textContent = '✓ PRO активна';
+    usageEl.style.display = 'none';
+  } else {
+    statusEl.className = 'pro-free';
+    statusText.textContent = 'Бесплатный тариф';
+    usageEl.style.display = 'block';
+    todayEl.textContent = proData?.today_usage || 0;
+  }
+}
+
+async function checkProStatus() {
+  const result = await proStatus();
+  if (result) {
+    proData = result;
+    isPro = !!result.is_pro;
+    updateProUI();
+    limitPeriods();
+  }
+}
+
 document.querySelectorAll('.period-btn').forEach((btn) => {
   btn.addEventListener('click', async () => {
+    const days = parseInt(btn.dataset.days, 10);
+    if (!proData?.is_pro && days > 7) return;
+
     document.querySelectorAll('.period-btn').forEach((b) => b.classList.remove('active'));
     btn.classList.add('active');
-    currentDays = parseInt(btn.dataset.days, 10);
+    currentDays = days;
 
     if (currentSku && currentMarketplace) {
       show('#loading');
@@ -250,4 +357,7 @@ document.querySelectorAll('.period-btn').forEach((btn) => {
   });
 });
 
-init();
+init().then(() => {
+  checkProStatus();
+  if (currentSku) proUse();
+});

@@ -178,6 +178,219 @@ app.get('/api/dashboard', (req, res) => {
   }
 });
 
+// ----- SUBSCRIPTIONS & PRO -----
+
+const YOOMONEY_WALLET = process.env.YOOMONEY_WALLET || '';
+const YOOMONEY_SECRET = process.env.YOOMONEY_SECRET || '';
+
+function generateKey() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let key = 'PRO-';
+  for (let i = 0; i < 12; i++) {
+    key += chars[Math.floor(Math.random() * chars.length)];
+    if (i % 4 === 3 && i < 11) key += '-';
+  }
+  return key;
+}
+
+function cryptoRandom() {
+  return require('crypto').randomBytes(16).toString('hex');
+}
+
+app.post('/api/pro/register', (req, res) => {
+  try {
+    const { client_id } = req.body;
+    if (!client_id) return res.status(400).json({ error: 'client_id required' });
+
+    const db = getDb();
+    db.run('INSERT OR IGNORE INTO clients (client_id) VALUES (?)', [client_id]);
+    saveDb();
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/api/pro/activate', (req, res) => {
+  try {
+    const { key, client_id } = req.body;
+    if (!key || !client_id) return res.status(400).json({ error: 'key and client_id required' });
+
+    const db = getDb();
+    const sub = db.exec(
+      'SELECT * FROM subscriptions WHERE key = ? AND active = 1 AND (expires_at IS NULL OR expires_at >= datetime(\'now\'))',
+      [key]
+    );
+
+    if (sub.length === 0 || sub[0].values.length === 0) {
+      return res.json({ success: false, error: 'Неверный или просроченный ключ' });
+    }
+
+    const cols = sub[0].columns;
+    const vals = sub[0].values[0];
+    const subData = {};
+    cols.forEach((col, i) => { subData[col] = vals[i]; });
+
+    if (subData.client_id && subData.client_id !== client_id) {
+      return res.json({ success: false, error: 'Ключ уже используется другим пользователем' });
+    }
+
+    db.run('UPDATE subscriptions SET client_id = ? WHERE id = ?', [client_id, subData.id]);
+    saveDb();
+    res.json({ success: true, expires_at: subData.expires_at });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/api/pro/use', (req, res) => {
+  try {
+    const { client_id } = req.body;
+    if (!client_id) return res.status(400).json({ error: 'client_id required' });
+
+    const db = getDb();
+    db.run(
+      `INSERT INTO usage_log (client_id, date, count) VALUES (?, date('now'), 1)
+       ON CONFLICT(client_id, date) DO UPDATE SET count = count + 1`,
+      [client_id]
+    );
+    saveDb();
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.get('/api/pro/status', (req, res) => {
+  try {
+    const { client_id } = req.query;
+    if (!client_id) return res.status(400).json({ error: 'client_id required' });
+
+    const db = getDb();
+
+    const usageResult = db.exec(
+      'SELECT count FROM usage_log WHERE client_id = ? AND date = date(\'now\')',
+      [client_id]
+    );
+    const todayUsage = usageResult.length > 0 && usageResult[0].values.length > 0
+      ? usageResult[0].values[0][0] : 0;
+
+    const subResult = db.exec(
+      `SELECT * FROM subscriptions WHERE client_id = ? AND active = 1
+       AND (expires_at IS NULL OR expires_at >= datetime('now'))`,
+      [client_id]
+    );
+
+    const isPro = subResult.length > 0 && subResult[0].values.length > 0;
+
+    res.json({
+      is_pro: !!isPro,
+      today_usage: todayUsage,
+      daily_limit: 10,
+      expires_at: isPro ? (subResult[0].values[0][subResult[0].columns.indexOf('expires_at')] || null) : null,
+    });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/api/pro/generate-key', (req, res) => {
+  try {
+    const { days } = req.body;
+    const db = getDb();
+    const key = generateKey();
+    const expiresAt = days ? `datetime('now', '+${days} days')` : null;
+
+    db.run(
+      `INSERT INTO subscriptions (key, expires_at) VALUES (?, ${expiresAt || 'NULL'})`,
+      [key]
+    );
+    saveDb();
+    res.json({ success: true, key });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/api/yoomoney/callback', (req, res) => {
+  try {
+    const notification_type = req.body.notification_type || '';
+    const operation_id = req.body.operation_id || '';
+    const amount = req.body.amount || '0';
+    const currency = req.body.currency || '';
+    const datetime = req.body.datetime || '';
+    const sender = req.body.sender || '';
+    const codepro = req.body.codepro || '';
+    const label = req.body.label || '';
+    const sha1_hash = req.body.sha1_hash || '';
+
+    const checkStr = `${notification_type}&${operation_id}&${amount}&${currency}&${datetime}&${sender}&${codepro}&${YOOMONEY_SECRET}&${label}`;
+    const hash = require('crypto').createHash('sha1').update(checkStr).digest('hex');
+
+    if (hash !== sha1_hash) {
+      return res.status(400).send('Invalid hash');
+    }
+
+    const db = getDb();
+    const key = generateKey();
+    db.run(
+      `INSERT INTO subscriptions (key, expires_at) VALUES (?, datetime('now', '+30 days'))`,
+      [key]
+    );
+    saveDb();
+
+    res.status(200).send(`KEY: ${key}`);
+  } catch (e) {
+    console.error('yoomoney error:', e);
+    res.status(500).send('Error');
+  }
+});
+
+app.get('/api/pro/pay', (req, res) => {
+  const receiver = YOOMONEY_WALLET || 'YOUR_WALLET_NUMBER';
+  const label = cryptoRandom();
+  const sum = '500';
+
+  res.send(`
+    <!DOCTYPE html>
+    <html><head><meta charset="utf-8"><title>Оплата PRO</title></head><body>
+    <h2>WB-Ozon Helper PRO — 500₽/мес</h2>
+    <form method="POST" action="https://yoomoney.ru/quickpay/confirm.xml">
+      <input type="hidden" name="receiver" value="${receiver}">
+      <input type="hidden" name="formcomment" value="WB-Ozon Helper PRO">
+      <input type="hidden" name="short-dest" value="WB-Ozon Helper PRO">
+      <input type="hidden" name="label" value="${label}">
+      <input type="hidden" name="quickpay-form" value="shop">
+      <input type="hidden" name="targets" value="PRO подписка">
+      <input type="hidden" name="sum" value="${sum}" data-type="number">
+      <input type="hidden" name="comment" value="PRO подписка WB-Ozon Helper">
+      <input type="hidden" name="successURL" value="https://wb-ozon-helper.onrender.com/api/pro/success?label=${label}">
+      <button type="submit">Оплатить 500₽</button>
+    </form>
+    <p>После оплаты ключ придёт на этот адрес через минуту. Проверьте статус в расширении.</p>
+    </body></html>
+  `);
+});
+
+app.get('/api/pro/success', (req, res) => {
+  const { label } = req.query;
+  const db = getDb();
+  const sub = db.exec(
+    'SELECT key FROM subscriptions ORDER BY id DESC LIMIT 1',
+    []
+  );
+  const key = sub.length > 0 && sub[0].values.length > 0 ? sub[0].values[0][0] : 'ожидайте...';
+  res.send(`
+    <!DOCTYPE html>
+    <html><head><meta charset="utf-8"><title>Оплата принята</title></head><body>
+    <h2>Спасибо за оплату!</h2>
+    <p>Ваш PRO-ключ: <b>${key}</b></p>
+    <p>Скопируйте его и введите в расширении.</p>
+    <p>Если ключ ещё не активирован — подождите минуту и проверьте статус в расширении.</p>
+    </body></html>
+  `);
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
