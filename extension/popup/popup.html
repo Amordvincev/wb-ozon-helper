@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="popup.css">
+  <title>WB-Ozon Помощник</title>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <img src="../icons/icon48.png" alt="logo" class="logo">
+      <h1>WB-Ozon Помощник</h1>
+    </header>
+
+    <div id="no-product" class="hidden">
+      <p>Откройте страницу товара на Wildberries или Ozon</p>
+    </div>
+
+    <div id="product-info" class="hidden">
+      <div class="product-header">
+        <span class="badge" id="marketplace-badge">WB</span>
+        <span class="sku" id="product-sku">Арт: —</span>
+      </div>
+      <h2 id="product-name">—</h2>
+
+      <div class="price-block">
+        <div class="current-price">
+          <span class="price-value" id="current-price">—</span>
+          <span class="price-currency">₽</span>
+        </div>
+        <div class="old-price-block" id="old-price-block" class="hidden">
+          <span class="old-price-value" id="old-price">—</span>
+          <span class="discount-badge" id="discount-badge">—%</span>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-value" id="stat-min">—</div>
+          <div class="stat-label">Мин</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="stat-max">—</div>
+          <div class="stat-label">Макс</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="stat-avg">—</div>
+          <div class="stat-label">Средняя</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="stat-change">—</div>
+          <div class="stat-label">Изменение</div>
+        </div>
+      </div>
+
+      <div class="period-selector">
+        <button class="period-btn" data-days="7">7д</button>
+        <button class="period-btn active" data-days="30">30д</button>
+        <button class="period-btn" data-days="60">60д</button>
+        <button class="period-btn" data-days="90">90д</button>
+      </div>
+
+      <div class="chart-container">
+        <canvas id="price-chart"></canvas>
+      </div>
+
+      <div class="details">
+        <div class="detail-row">
+          <span class="detail-label">Продавец</span>
+          <span class="detail-value" id="detail-seller">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Рейтинг</span>
+          <span class="detail-value" id="detail-rating">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Категория</span>
+          <span class="detail-value" id="detail-category">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Остаток</span>
+          <span class="detail-value" id="detail-stock">—</span>
+        </div>
+      </div>
+
+      <div class="seller-analysis" id="seller-analysis" class="hidden">
+        <h3>Анализ продавца</h3>
+        <div id="seller-products-count">Товаров: —</div>
+        <div id="seller-avg-rating">Средний рейтинг: —</div>
+      </div>
+    </div>
+
+    <div id="loading" class="hidden">
+      <div class="spinner"></div>
+      <p>Загрузка данных...</p>
+    </div>
+  </div>
+
+  <script src="../lib/chart.umd.min.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

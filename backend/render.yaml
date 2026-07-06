@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: wb-ozon-helper-api
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
