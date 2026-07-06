@@ -49,6 +49,12 @@ const NEVER_BRAND = new Set([
   'один', 'два', 'три', 'четыре', 'пять',
   'клиентам', '089', '088', '087', '086', '085',
   'доп', 'доп.', 'trade-in', 'tradein', 'трейд-ин', 'трейдин',
+  'оборудование', 'оборуд', 'аксессуар', 'комплект', 'набор',
+  'подарок', 'подар', 'подарочный',
+  'авто', 'автомобиль', 'машина', 'легковой',
+  'выго', 'выгодно', 'выгода', 'solaris', 'солярис',
+  '689', '000', '149', '688', '687', '686', '685', '684', '683', '682', '681',
+  '001', '002', '003', '004', '005',
 ]);
 
 function parseBrand(title) {
@@ -95,6 +101,7 @@ function isGarbageBrand(brand) {
   if (NEVER_BRAND.has(clean)) return true;
   if (SKIP_WORDS.has(clean)) return true;
   if (clean.length < 2) return true;
+  if (/^\d+$/.test(clean)) return true; // pure numbers like "689", "000"
   return false;
 }
 
