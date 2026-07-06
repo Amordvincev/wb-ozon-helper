@@ -10,7 +10,17 @@ app.use(express.json({ limit: '1mb' }));
 
 app.post('/api/price', (req, res) => {
   try {
-    const { marketplace, sku, name, price, old_price, seller, rating, stock, category, url } = req.body;
+    const raw = req.body;
+    const marketplace = raw.marketplace ?? null;
+    const sku = raw.sku ?? null;
+    const name = raw.name ?? null;
+    const price = raw.price ?? null;
+    const old_price = raw.old_price ?? null;
+    const seller = raw.seller ?? null;
+    const rating = raw.rating ?? null;
+    const stock = raw.stock ?? null;
+    const category = raw.category ?? null;
+    const url = raw.url ?? null;
 
     if (!marketplace || !sku) {
       return res.status(400).json({ error: 'marketplace and sku are required' });
