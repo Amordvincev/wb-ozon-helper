@@ -20,27 +20,79 @@ const KNOWN_BRANDS = [
   'Tesla', 'UAZ', 'ГАЗ', 'Газ', 'Moskvich', 'Москвич', 'Datsun',
   'Great Wall', 'Jaguar', 'Seat', 'Fiat', 'Dodge', 'Chrysler',
   'SsangYong', 'Ssang yong', 'Daihatsu', 'Alfa Romeo', 'Citroёn',
-  'Omoda', 'Jetour', 'Faw', 'Bestune', 'Kaiyi', 'SWM',
+  'Omoda', 'Jetour', 'Faw', 'Bestune', 'Kaiyi', 'SWM', 'Tank',
+  'Voyah', 'Lixiang', 'LiXiang', 'Zeekr', 'BYD', 'Dongfeng',
+  'Tenet', 'TENET',
 ];
 
 const BRAND_SET = new Set(KNOWN_BRANDS.map(b => b.toLowerCase()));
 
+const SKIP_WORDS = new Set([
+  'от', 'до', 'продаю', 'срочно', 'битый', 'не', 'на', 'в', 'с',
+  'купил', 'обмен', 'куплю', 'ищу', 'нужен', 'поменяю', 'сниму',
+  'продам', 'обменяю', 'стоит', 'есть', 'будет', 'без', 'всего',
+  'месяц', 'год', 'день',   'кредит', 'рассрочка', 'нал',
+  'первым', 'вторым', 'третьим', 'четвертым', 'пятым',
+  'владельцем', 'владелец', 'хозяин', 'свой', 'новый',
+  'свежий', 'отличный', 'хороший', 'рабочий', 'живой',
+  'срочная', 'срочное', 'цена', 'руб', 'возможен',
+  'клиентам', 'покупателям', 'сервис', 'салон', 'автосалон',
+]);
+
+// These words alone are NEVER brands (but might be part of title)
+const NEVER_BRAND = new Set([
+  'без', 'месяц', 'первым', 'вторым', 'третьим', '1', '2', '3', '4', '5',
+  '6', '7', '8', '9', '0',
+  'один', 'два', 'три', 'четыре', 'пять',
+  'клиентам', '089', '088', '087', '086', '085',
+]);
+
 function parseBrand(title) {
-  const firstWord = title.split(/[\s,]+/)[0];
-  const lower = firstWord.toLowerCase();
-  if (BRAND_SET.has(lower)) return firstWord;
-  // Check multi-word brands
   const words = title.split(/\s+/);
+
+  // Try multi-word brands first
   for (let i = Math.min(words.length, 3); i >= 1; i--) {
-    const phrase = words.slice(0, i).join(' ').toLowerCase();
+    const phrase = words.slice(0, i).join(' ').toLowerCase().replace(/[^a-zа-яё0-9\s]/g, '');
     if (BRAND_SET.has(phrase)) return words.slice(0, i).join(' ');
   }
-  return firstWord;
+
+  // Look for any known brand anywhere in the title
+  for (const word of words) {
+    const clean = word.toLowerCase().replace(/[^a-zа-яё0-9]/g, '');
+    if (BRAND_SET.has(clean)) return word;
+  }
+
+  // Skip fluff, return first real word
+  for (const word of words) {
+    const clean = word.toLowerCase().replace(/[^a-zа-яё]/g, '');
+    if (NEVER_BRAND.has(clean)) continue;
+    if (SKIP_WORDS.has(clean)) continue;
+    if (clean.length < 2) continue;
+    // Must start with capital letter to be a brand
+    if (word[0] === word[0].toUpperCase() && word[0] !== word[0].toLowerCase()) {
+      return word;
+    }
+  }
+
+  // Last resort
+  for (const word of words) {
+    const clean = word.toLowerCase().replace(/[^a-zа-яё0-9]/g, '');
+    if (NEVER_BRAND.has(clean)) continue;
+    if (SKIP_WORDS.has(clean)) continue;
+    if (clean.length >= 2) return word;
+  }
+
+  return words[0] || '—';
 }
 
 function parseModel(title, brand) {
-  const rest = title.slice(brand.length).trim();
-  return rest.split(/[\s,]+/)[0] || '-';
+  if (!brand || brand === '—') return '-';
+  const idx = title.indexOf(brand);
+  if (idx < 0) return '-';
+  const rest = title.slice(idx + brand.length).trim();
+  let model = rest.split(/[\s,]+/)[0] || '-';
+  model = model.replace(/[^a-zA-Zа-яА-ЯёЁ0-9-]/g, '');
+  return model || '-';
 }
 
 async function fetchPage(url) {
