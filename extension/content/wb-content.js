@@ -97,10 +97,10 @@
       }
     }
 
-    const lastCrumb = document.querySelector('[class*="breadcrumbs"] li:last-child, [class*="breadcrumbs"] [class*="item"]:last-child, [class*="crumb"]:last-child');
-    if (lastCrumb) {
-      const text = lastCrumb.textContent.trim();
-      if (text && !text.includes('Главная') && text.length > 1) return text;
+    const breadEl = document.querySelector('[class*="breadcrumbs"]');
+    if (breadEl) {
+      const text = breadEl.textContent.replace(/\s+/g, ' ').trim().split(/[/>]/).pop().trim();
+      if (text && text.length > 1 && !text.includes('Главная')) return text;
     }
 
     return null;

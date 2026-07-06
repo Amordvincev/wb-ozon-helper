@@ -299,11 +299,13 @@ app.post('/api/pro/generate-key', (req, res) => {
     const { days } = req.body;
     const db = getDb();
     const key = generateKey();
-    const expiresAt = days ? `datetime('now', '+${days} days')` : null;
+    const expiresAt = days
+      ? new Date(Date.now() + days * 86400000).toISOString().slice(0, 19).replace('T', ' ')
+      : null;
 
     db.run(
-      `INSERT INTO subscriptions (key, expires_at) VALUES (?, ${expiresAt || 'NULL'})`,
-      [key]
+      'INSERT INTO subscriptions (key, expires_at) VALUES (?, ?)',
+      [key, expiresAt]
     );
     saveDb();
     res.json({ success: true, key });
@@ -333,9 +335,10 @@ app.post('/api/yoomoney/callback', (req, res) => {
 
     const db = getDb();
     const key = generateKey();
+    const expiresAt = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 19).replace('T', ' ');
     db.run(
-      `INSERT INTO subscriptions (key, expires_at) VALUES (?, datetime('now', '+30 days'))`,
-      [key]
+      'INSERT INTO subscriptions (key, expires_at) VALUES (?, ?)',
+      [key, expiresAt]
     );
     saveDb();
 
@@ -349,9 +352,10 @@ app.post('/api/yoomoney/callback', (req, res) => {
 app.get('/api/pro/test-pay', (req, res) => {
   const db = getDb();
   const key = generateKey();
+  const expiresAt = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 19).replace('T', ' ');
   db.run(
-    `INSERT INTO subscriptions (key, expires_at) VALUES (?, datetime('now', '+30 days'))`,
-    [key]
+    'INSERT INTO subscriptions (key, expires_at) VALUES (?, ?)',
+    [key, expiresAt]
   );
   saveDb();
   res.send(`<h2>Тестовый платёж</h2><p>Сгенерирован ключ: <b>${key}</b></p><p>Введите его в расширении.</p>`);
