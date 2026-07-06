@@ -83,6 +83,7 @@
       '[class*="sellerAndBrandItemName"]',
       '[class*="brandBadgeWrapper"]',
       '[class*="brandBadgeText"]',
+      '[class*="brandBadge"]',
       '[class*="sellerInfoWithChat"]',
       '[class*="sellerAndBrand"]',
       '.product-card__brand',
@@ -95,6 +96,13 @@
         if (text && text.length > 1) return text;
       }
     }
+
+    const lastCrumb = document.querySelector('[class*="breadcrumbs"] li:last-child, [class*="breadcrumbs"] [class*="item"]:last-child, [class*="crumb"]:last-child');
+    if (lastCrumb) {
+      const text = lastCrumb.textContent.trim();
+      if (text && !text.includes('Главная') && text.length > 1) return text;
+    }
+
     return null;
   }
 
