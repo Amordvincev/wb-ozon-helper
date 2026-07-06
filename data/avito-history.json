@@ -1,0 +1,118 @@
+[
+  {
+    "date": "2026-07-06",
+    "city": "Волгоград",
+    "stats": {
+      "total": 50,
+      "avgPrice": 1869767,
+      "medianPrice": 1757000,
+      "minPrice": 435000,
+      "maxPrice": 4269990,
+      "avgYear": 2024,
+      "avgMileage": null,
+      "brands": [
+        {
+          "brand": "ВАЗ",
+          "count": 18,
+          "avgPrice": 1168778
+        },
+        {
+          "brand": "haval",
+          "count": 7,
+          "avgPrice": 2213000
+        },
+        {
+          "brand": "geely",
+          "count": 6,
+          "avgPrice": 3416657
+        },
+        {
+          "brand": "TENET",
+          "count": 5,
+          "avgPrice": 2250000
+        },
+        {
+          "brand": "JAECOO",
+          "count": 2,
+          "avgPrice": 2177600
+        },
+        {
+          "brand": "exeed",
+          "count": 2,
+          "avgPrice": 2310000
+        },
+        {
+          "brand": "Москвич",
+          "count": 2,
+          "avgPrice": 1806600
+        }
+      ],
+      "models": [
+        {
+          "brand": "ВАЗ",
+          "model": "(LADA)",
+          "fullName": "ВАЗ (LADA)",
+          "count": 18,
+          "avgPrice": 1168778,
+          "avgYear": 2026,
+          "avgMileage": null
+        },
+        {
+          "brand": "TENET",
+          "model": "T7",
+          "fullName": "TENET T7",
+          "count": 3,
+          "avgPrice": 2112000,
+          "avgYear": 2026,
+          "avgMileage": null
+        },
+        {
+          "brand": "geely",
+          "model": "Monjaro",
+          "fullName": "geely Monjaro",
+          "count": 2,
+          "avgPrice": 4209990,
+          "avgYear": 2026,
+          "avgMileage": null
+        },
+        {
+          "brand": "geely",
+          "model": "Cityray",
+          "fullName": "geely Cityray",
+          "count": 2,
+          "avgPrice": 2709990,
+          "avgYear": 2026,
+          "avgMileage": null
+        },
+        {
+          "brand": "haval",
+          "model": "Jolion",
+          "fullName": "haval Jolion",
+          "count": 2,
+          "avgPrice": 1889000,
+          "avgYear": 2026,
+          "avgMileage": null
+        },
+        {
+          "brand": "haval",
+          "model": "M6",
+          "fullName": "haval M6",
+          "count": 2,
+          "avgPrice": 1839000,
+          "avgYear": 2026,
+          "avgMileage": null
+        },
+        {
+          "brand": "Москвич",
+          "model": "3",
+          "fullName": "Москвич 3",
+          "count": 2,
+          "avgPrice": 1806600,
+          "avgYear": 2026,
+          "avgMileage": null
+        }
+      ],
+      "sampledAt": "2026-07-06T23:38:28.035Z"
+    }
+  }
+]
